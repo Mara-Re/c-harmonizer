@@ -40,6 +40,9 @@ export const useTitleSectionStyles = makeStyles(theme => ({
 export const useDnaInputStyles = makeStyles(theme => ({
     textArea: {
         width: '400px',
-        margin: '20px'
+        margin: '20px 0'
+    },
+    submitBtn: {
+        margin: '0 0 20px'
     }
 }));
