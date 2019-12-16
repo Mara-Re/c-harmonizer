@@ -1,4 +1,4 @@
-const {aminoDict, allCodons, codonAaDict} = require('./codons');
+const {aminoDict, allCodons, codonAaDict, emptyCodonCountObj} = require('./codons');
 
 
 //----------------FOR TESTING------------------------------
@@ -17,7 +17,7 @@ function calcCodonScoreDict(refGene) {
     const codonScores = calcCodonScores(codonCounts);
 
     let scoreDict = {};
-    for (aA in aminoDict) {             //also requires aminoDict
+    for (const aA in aminoDict) {             //also requires aminoDict
         let obj = {};
         for (let i = 0; i < aminoDict[aA].length; i++) {
             let codon = aminoDict[aA][i];
@@ -25,18 +25,30 @@ function calcCodonScoreDict(refGene) {
         }
         scoreDict[aA] = obj;
     }
-    console.log('scoreDict: ', scoreDict);
+    // console.log('scoreDict: ', scoreDict);
+
+    // { A: {  GCA: 0.07647058823529412,
+    //         GCC: 0.48823529411764705,
+    //         GCG: 0.041176470588235294,
+    //         GCT: 0.3941176470588235 },
+    //   C: { TGC: 0.7058823529411765, 
+    //         TGT: 0.29411764705882354 },
+    //   D: { GAC: 0.49, GAT: 0.51 },
+    //    ...
+    // }
+
     return scoreDict;
 }
 
-function calcGeneScore(gene, sourceCodonScores) {
+function calcGeneScore(gene, refCodonScoresDict) {
+    console.log('codon scores: ', refCodonScoresDict);
     const codonArr = splitDnaIntoCodons(gene);
 
     const geneScoreArray = codonArr.map(codon => {
         const aA = codonAaDict[codon];
-        return sourceCodonScores[aA][codon];
+        return refCodonScoresDict[aA][codon];
     });
-    console.log('geneScoreArray: ', geneScoreArray);
+    // console.log('geneScoreArray: ', geneScoreArray);
     return geneScoreArray;
 }
 
@@ -47,7 +59,7 @@ function calcHarmonizedGeneSeq(gene, geneScoreSource, targetCodonScores) {
         let bestCodon;
         let bestCodonDiff = 1;
         const aA = codonAaDict[codon];  //also requires codonAaDict
-        for (codonKey in targetCodonScores[aA]) {
+        for (const codonKey in targetCodonScores[aA]) {
             if (Math.abs(targetCodonScores[aA][codonKey] - geneScoreSource[i]) < bestCodonDiff) {
                 bestCodonDiff = Math.abs(targetCodonScores[aA][codonKey] - geneScoreSource[i]);
                 bestCodon = codonKey;
@@ -66,23 +78,17 @@ module.exports.calcHarmonizedGeneSeq = calcHarmonizedGeneSeq;
 module.exports.calcGeneScore = calcGeneScore;
 
 
-
 function splitDnaIntoCodons(dnaStr) {      
     const codonArr = dnaStr.replace(/\s/g,"").match(/.{1,3}/g); //ignore white spaces & split into blocks of 3 characters
-    
     // console.log('codonArr: ', codonArr);
-    // ["ATG", "TCT", "ACT", "GTA", ...]
-    //Test: length of codonArr should be length of input after removing white spaces devided by 3
-    
+    // ["ATG", "TCT", "ACT", "GTA", ...]    
     return codonArr;
 }
 
 function countAllCodons(codonArr) {
-    var codonCounts = {};  
-    for (var j = 0; j < allCodons.length; j++) {     //also requires array const allCodons
-        codonCounts[allCodons[j]] = 0;
-    }
-    for (var i = 0; i < codonArr.length; i++) {
+    let codonCounts = {...emptyCodonCountObj};  //also requires emptyCodonCountObj
+    
+    for (let i = 0; i < codonArr.length; i++) {
         codonCounts[codonArr[i]] += 1;
     }
     // console.log("codonCounts Object: ", codonCounts);    
@@ -95,49 +101,26 @@ function countAllCodons(codonArr) {
     //     ACC: 51,
     //     ...
     // } 
-    //Test: codonCounts should contain all 64 codons!
-    //Test: adding all codonCounts together should be equal the length of codonArr
 
     return codonCounts;
 }
 
-// function addCodonScoresToAminoDict(codonScores) {
-//     var aminoDictScore = {};
-//     for (aA in aminoDict) {             //also requires aminoDict
-//         var obj = {};
-//         for (var i = 0; i < aminoDict[aA].length; i++) {
-//             var codon = aminoDict[aA][i];
-//             obj[codon] = codonScores[codon];
-//         }
-//         aminoDictScore[aA] = obj
-//     }
-//     // console.log('aminoDictScore: ', aminoDictScore);
-
-        // { A: {  GCA: 0.07647058823529412,
-        //         GCC: 0.48823529411764705,
-        //         GCG: 0.041176470588235294,
-        //         GCT: 0.3941176470588235 },
-        //   C: { TGC: 0.7058823529411765, 
-        //         TGT: 0.29411764705882354 },
-        //   D: { GAC: 0.49, GAT: 0.51 },
-        //    ...
-        // }
-        //Test: within one amino acid -> the sum of all values should be 1
-
-//     return aminoDictScore;
-// }
-
 function calcCodonScores(codonCounts) {        //also requires aminoDict
     // console.log('codonCounts: ', codonCounts);
-    var codonScores = {};
-    for (aA in aminoDict) {     //looping through all amino acids
-        var codonSumPerAa = 0
-        for  (var i = 0; i < aminoDict[aA].length; i++) {      //first loop to determine amount of codons encoding one spedific amino acid
+    let codonScores = {};
+    for (const aA in aminoDict) {     //looping through all amino acids
+        let codonSumPerAa = 0
+        for  (let i = 0; i < aminoDict[aA].length; i++) {      //first loop to determine amount of codons encoding one spedific amino acid
             codonSumPerAa += codonCounts[aminoDict[aA][i]];  //codonCounts of the current amino acid
         }
         // console.log('aA & codonSumPerAa: ', aA, codonSumPerAa);
-        for  (var i = 0; i < aminoDict[aA].length; i++) {       //second loop to determine score of each of the codons
-            codonScores[aminoDict[aA][i]] = codonCounts[aminoDict[aA][i]] / codonSumPerAa;
+        for  (let i = 0; i < aminoDict[aA].length; i++) {       //second loop to determine score of each of the codons
+            if (codonSumPerAa == 0) {       //if the amino acid was never encoded
+                codonScores[aminoDict[aA][i]] = 0;  //set all scores to 0 --
+                //???? OR SET TO 1/(NR of CODONS)????
+            } else {
+                codonScores[aminoDict[aA][i]] = codonCounts[aminoDict[aA][i]] / codonSumPerAa;
+            }
         }        
     }
     
@@ -161,27 +144,17 @@ function translateDna(codonAaDict, codonArr) {
     return translatedDna;
 }
 
-//SCORE ARRAY for geneOfInterest depending on the codonScores of SOURCE ORGANISM
-function getGeneScoreArray(codonArr, codonScores) {
-    var geneScoreArray = [];
-    for (var i = 0; i < codonArr.length; i++) {
-        geneScoreArray.push(codonScores[codonArr[i]]);
-    }
-    // console.log('geneScoreArray: ', geneScoreArray);
-    return geneScoreArray;
-}
-
 //SMOOTHED SCORE ARRAY
 // function getSmoothedScoreArray(geneScoreArray, oddNrOfCodonsForMean) {
-//     var smoothedScoreArr = [];
-//     var plusMinus = (oddNrOfCodonsForMean - 1) / 2;
-//     for (var i = 0; i < geneScoreArray.length; i++) {
+//     let smoothedScoreArr = [];
+//     let plusMinus = (oddNrOfCodonsForMean - 1) / 2;
+//     for (let i = 0; i < geneScoreArray.length; i++) {
 //         if (i < plusMinus|| i >= geneScoreArray.length - plusMinus) {
 //             smoothedScoreArr.push('');
 //         } else {
-//             var partialArrOfScores = geneScoreArray.slice(i - plusMinus, i + plusMinus + 1);
+//             let partialArrOfScores = geneScoreArray.slice(i - plusMinus, i + plusMinus + 1);
 //             //partialArrOfScores.length should always equal oddNrOfCodonsForMean!
-//             var sumOfScores = partialArrOfScores.reduce((mean, score) => {
+//             let sumOfScores = partialArrOfScores.reduce((mean, score) => {
 //                 return mean + score;
 //             });          
             
@@ -194,25 +167,8 @@ function getGeneScoreArray(codonArr, codonScores) {
 // }
 
 
-
-
-
-//////////amino dict COUNTS
-// console.log('aminoDictCounts: ', aminoDictCounts);  //COUNTS OR SCORES???
-    // { A: { GCA: 13, GCC: 83, GCG: 7, GCT: 67 },
-    //   C: { TGC: 12, TGT: 5 },
-    //   D: { GAC: 49, GAT: 51 },
-    //   E: { GAA: 37, GAG: 100 },
-    //   ...
-    // }
-    //Test: aminoDictCounts should contain all amino acids
-    //Test: aminoDictCounts should contain all codons
-    //Test: adding all counts in aminoDictCounts together should be equal to length of codonArr
-
-
 //---------------EXPORTS FOR TESTING---------------
 module.exports.splitDnaIntoCodons = splitDnaIntoCodons;
 module.exports.countAllCodons = countAllCodons;
 module.exports.calcCodonScores = calcCodonScores;
-module.exports.translateDna = translateDna;
-module.exports.getGeneScoreArray = getGeneScoreArray;
+// module.exports.translateDna = translateDna;
