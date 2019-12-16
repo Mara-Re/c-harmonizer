@@ -10,9 +10,9 @@ export default function Results() {
     const harmonizedSeq = useSelector(state => {
         return state.results && state.results.harmonizedGeneSeq
     });
-    if (!harmonizedSeq) {
-        return null //OR SPINNER!
-    }
+    // if (!harmonizedSeq) {
+    //     return null //OR SPINNER!
+    // }
 
     return (
         <>

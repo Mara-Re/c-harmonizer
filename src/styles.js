@@ -64,3 +64,11 @@ export const useBtnStyles = makeStyles(theme => ({
         margin: '0 0 20px'
     }
 }));
+
+// export const useStylesChart = makeStyles(theme => ({
+//     chart: {
+//         height: '100px',
+//         width: '80%'
+//     }
+// }));
+

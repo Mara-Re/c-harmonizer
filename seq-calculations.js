@@ -2,6 +2,7 @@ const {aminoDict, allCodons, codonAaDict, emptyCodonCountObj} = require('./codon
 
 
 //----------------FOR TESTING------------------------------
+
 const {
     FASwoIntrons, 
     MSASwoIntrons,
@@ -11,7 +12,7 @@ const {
 
 
 function calcCodonScoreDict(refGene) {
-    console.log('refGene: ', refGene);
+    // console.log('refGene: ', refGene);
     const codonArr = splitDnaIntoCodons(refGene);
     const codonCounts = countAllCodons(codonArr);
     const codonScores = calcCodonScores(codonCounts);
@@ -41,7 +42,7 @@ function calcCodonScoreDict(refGene) {
 }
 
 function calcGeneScore(gene, refCodonScoresDict) {
-    console.log('codon scores: ', refCodonScoresDict);
+    // console.log('codon scores: ', refCodonScoresDict);
     const codonArr = splitDnaIntoCodons(gene);
 
     const geneScoreArray = codonArr.map(codon => {
@@ -63,8 +64,8 @@ function calcHarmonizedGeneSeq(gene, geneScoreSource, targetCodonScores) {
             if (Math.abs(targetCodonScores[aA][codonKey] - geneScoreSource[i]) < bestCodonDiff) {
                 bestCodonDiff = Math.abs(targetCodonScores[aA][codonKey] - geneScoreSource[i]);
                 bestCodon = codonKey;
-                console.log('bestCodonDiff: ', bestCodonDiff);
-                console.log('bestCodon: ', bestCodon);
+                // console.log('bestCodonDiff: ', bestCodonDiff);
+                // console.log('bestCodon: ', bestCodon);
             }
         }
         return bestCodon;

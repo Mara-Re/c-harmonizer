@@ -4,6 +4,18 @@ const compression = require('compression');
 const seq = require('./seq-calculations');
 
 
+//----------------FOR TESTING------------------------------
+const {
+    sourceCodonScoresEx,
+    targetCodonScoresEx,
+    geneScoreSourceEx,
+    geneScoreTargetEx,
+    harmonizedSeqEx,
+    harmonizedGeneScoreTargetEx
+} = require('./hardcoded-examples');
+//------------^^^^FOR TESTING------------------------------
+
+
 //----------------MIDDLEWARE----------------
 app.use(compression());
 app.use(express.static('./public'));
@@ -29,8 +41,6 @@ if (process.env.NODE_ENV != 'production') {
 
 //----------------SEQ INPUT----------------
 app.post('/seq-input.json', async (req, res) => {
-    console.log('req.body.refSource: ', req.body.refSource);
-    console.log('req.body.gene: ', req.body.gene);
     //ALL CALCULATIONS
     const {gene, refSource, refTarget} = req.body;
     const sourceCodonScores = seq.calcCodonScoreDict(refSource);
@@ -40,17 +50,35 @@ app.post('/seq-input.json', async (req, res) => {
     const harmonizedGeneSeq = seq.calcHarmonizedGeneSeq(gene, geneScoreSource, targetCodonScores);
     const harmonizedGeneScoreTarget = seq.calcGeneScore(harmonizedGeneSeq, targetCodonScores);
     //...
+    console.log('sourceCodonScores: ', sourceCodonScores);
+    console.log('targetCodonScores: ', targetCodonScores);
+    console.log('geneScoreSource: ', geneScoreSource);
+    console.log('geneScoreTarget: ', geneScoreTarget);
+    console.log('harmonizedGeneSeq: ', harmonizedGeneSeq);
+    console.log('harmonizedGeneScoreTarget: ', harmonizedGeneScoreTarget);
     try {
         //db.saveSeqInput(req.body.gene, req.body.refSource, req.body.refTarget);
+        // res.json({
+        //     success: true,
+        //     sourceCodonScores,
+        //     targetCodonScores,
+        //     harmonizedGeneSeq,
+        //     geneScoreSource,
+        //     geneScoreTarget,
+        //     harmonizedGeneScoreTarget
+        // });
         res.json({
-            success: true,
-            sourceCodonScores,
-            targetCodonScores,
-            harmonizedGeneSeq,
-            geneScoreSource,
-            geneScoreTarget,
-            harmonizedGeneScoreTarget
+            hardCoded: true,
+            sourceCodonScores: sourceCodonScoresEx,
+            targetCodonScores:targetCodonScoresEx,
+            harmonizedGeneSeq: harmonizedSeqEx,
+            geneScoreSource: geneScoreSourceEx,
+            geneScoreTarget: geneScoreTargetEx,
+            harmonizedGeneScoreTarget: harmonizedGeneScoreTargetEx
         });
+        
+
+
     } catch (err) {
         console.log('err in saveSeqInput: ', err);
         res.json({
