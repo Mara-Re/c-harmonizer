@@ -1,5 +1,20 @@
 import { makeStyles } from '@material-ui/core';
 
+export const useGlobalStyles = makeStyles(theme => ({
+    '@global': {
+        //SCROLL BAR DISPLAY:
+        '*::-webkit-scrollbar': {
+          width: '0.4em'
+        },
+        '*::-webkit-scrollbar-track': {
+          '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
+        },
+        '*::-webkit-scrollbar-thumb': {
+          backgroundColor: 'rgba(0,0,0,.3)',
+          outline: '1px solid slategrey'
+        }
+    }
+}));
 
 export const useNavbarStyles = makeStyles(theme => ({
     container: {
@@ -37,11 +52,14 @@ export const useTitleSectionStyles = makeStyles(theme => ({
     }
 }));
 
-export const useDnaInputStyles = makeStyles(theme => ({
-    textArea: {
+export const useTextFieldStyles = makeStyles(theme => ({
+    margWidth: {
         width: '400px',
         margin: '20px 0'
-    },
+    }
+}));
+
+export const useBtnStyles = makeStyles(theme => ({
     submitBtn: {
         margin: '0 0 20px'
     }

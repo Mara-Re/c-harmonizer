@@ -20,6 +20,6 @@ export async function submitInput(gene, refSource, refTarget) {
     console.log('data from axios post /seq-input.json: ', data);
     return {
         type: 'SUBMIT_INPUT',
-        data: data
+        results: data
     };
 };

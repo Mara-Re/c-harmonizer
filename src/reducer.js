@@ -13,7 +13,7 @@ export default function reducer (state = {}, action) {
         console.log('SUBMIT_INPUT');
         state = {
             ...state,
-            data: action.data
+            results: action.results
         };
     }
 

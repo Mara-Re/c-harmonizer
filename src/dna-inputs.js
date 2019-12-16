@@ -1,11 +1,13 @@
-import React, {useEffect, useState, useRef} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {inputChange, submitInput} from './actions';
-import {Typography, TextField, Button} from '@material-ui/core';
-import {useDnaInputStyles} from './styles';
+import {Link} from 'react-router-dom';
+import {TextField, Button} from '@material-ui/core';
+import {useTextFieldStyles, useBtnStyles} from './styles';
 
 export default function DnaInputs() {
-    const stylesDnaInputs = useDnaInputStyles();
+    const stylesTextField = useTextFieldStyles();
+    const stylesBtn = useBtnStyles();
     const dispatch = useDispatch();
 
     const handleChange = e => {
@@ -57,7 +59,7 @@ export default function DnaInputs() {
                 multiline={true}
                 rows={6}
                 rowsMax={6}
-                className={stylesDnaInputs.textArea} 
+                className={stylesTextField.margWidth} 
                 inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
                 onChange={e => handleChange(e)}
             />
@@ -71,7 +73,7 @@ export default function DnaInputs() {
                 multiline={true}
                 rows={6}
                 rowsMax={6}
-                className={stylesDnaInputs.textArea} 
+                className={stylesTextField.margWidth} 
                 inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
                 onChange={e => handleChange(e)}
             />
@@ -85,17 +87,19 @@ export default function DnaInputs() {
                 multiline={true}
                 rows={6}
                 rowsMax={6}
-                className={stylesDnaInputs.textArea} 
+                className={stylesTextField.margWidth} 
                 inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
                 onChange={e => handleChange(e)}
             />
             <br/>
-            <Button
-                className={stylesDnaInputs.submitBtn}
-                onClick={() => dispatch(submitInput(gene, refSource, refTarget))}
-            >
-                Submit
-            </Button>
+            <Link to='/results'>
+                <Button
+                    className={stylesBtn.submitBtn}
+                    onClick={() => dispatch(submitInput(gene, refSource, refTarget))}
+                >
+                    Submit
+                </Button>
+            </Link>
         </section>
     );
 };
