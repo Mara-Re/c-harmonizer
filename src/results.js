@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react';
 import {useSelector} from 'react-redux'; 
+import {Typography} from '@material-ui/core';
 
 import Graph from './graph';
 import HarmonizedGene from './harmonized-gene';
-import TableCodonUsage from './table-codon-usage';
+import CodonUsage from './codon-usage';
 
 export default function Results() {  
 
@@ -21,10 +22,13 @@ export default function Results() {
   
 
     return (
-        <>
+        <>  
+            <Typography variant='h4' component='h1' gutterBottom>
+                Results
+            </Typography>
             <HarmonizedGene />            
             <Graph />
-            <TableCodonUsage />
+            <CodonUsage />
         </>
     );
 };

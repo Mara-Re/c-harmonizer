@@ -93,9 +93,9 @@ export default function Graph() {
     }
     
     return (
-        <>
-            <Typography variant='h5' component='h1' gutterBottom>
-                Graph Component
+        <section className={stylesChart.sect}>
+            <Typography variant='h6' component='h2' gutterBottom>
+                Gene of Interest Scores
             </Typography>
             <div className={stylesChart.container}>
                 <div style={{height: '100%', width: widthOfChart}}>
@@ -106,6 +106,6 @@ export default function Graph() {
                     />
                 </div>
             </div>
-        </>
+        </section>
     )
 }

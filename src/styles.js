@@ -68,9 +68,23 @@ export const useBtnStyles = makeStyles(theme => ({
 export const useStylesChart = makeStyles(theme => ({
     container: {
         height: '250px',
-        width: '80%',
+        width: '100%',
         overflowX: 'scroll',
-        padding: '20px 0'
+        padding: '5px 0'
+    },
+    sect: {
+        padding: '50px 0 0'
+    }
+}));
+
+export const useStylesTable = makeStyles(theme => ({
+    container: {
+        height: '250px',
+        overflowY: 'scroll' ,
+        marginRight: '20px'      
+    },
+    sect: {
+        padding: '50px 0'
     }
 }));
 

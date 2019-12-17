@@ -16,10 +16,10 @@ export default function HarmonizedGene() {
 
     return (
         <>
-            <Typography variant='h5' component='h1' gutterBottom>
+            <Typography variant='h6' component='h2' gutterBottom>
                 Harmonized Gene of Interest
             </Typography>
-            <Typography variant='body1' component='h1' gutterBottom>
+            <Typography variant='body1' gutterBottom>
                 x codons, harmonized for organismX, source organismY
             </Typography>
             <TextField 
