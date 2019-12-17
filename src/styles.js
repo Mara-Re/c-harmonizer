@@ -65,10 +65,12 @@ export const useBtnStyles = makeStyles(theme => ({
     }
 }));
 
-// export const useStylesChart = makeStyles(theme => ({
-//     chart: {
-//         height: '100px',
-//         width: '80%'
-//     }
-// }));
+export const useStylesChart = makeStyles(theme => ({
+    container: {
+        height: '250px',
+        width: '80%',
+        overflowX: 'scroll',
+        padding: '20px 0'
+    }
+}));
 

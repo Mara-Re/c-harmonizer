@@ -42,20 +42,15 @@ if (process.env.NODE_ENV != 'production') {
 //----------------SEQ INPUT----------------
 app.post('/seq-input.json', async (req, res) => {
     //ALL CALCULATIONS
-    const {gene, refSource, refTarget} = req.body;
-    const sourceCodonScores = seq.calcCodonScoreDict(refSource);
-    const targetCodonScores = seq.calcCodonScoreDict(refTarget);
-    const geneScoreSource = seq.calcGeneScore(gene, sourceCodonScores);
-    const geneScoreTarget  = seq.calcGeneScore(gene, targetCodonScores);
-    const harmonizedGeneSeq = seq.calcHarmonizedGeneSeq(gene, geneScoreSource, targetCodonScores);
-    const harmonizedGeneScoreTarget = seq.calcGeneScore(harmonizedGeneSeq, targetCodonScores);
+    // const {gene, refSource, refTarget} = req.body;
+    // const sourceCodonScores = seq.calcCodonScoreDict(refSource);
+    // const targetCodonScores = seq.calcCodonScoreDict(refTarget);
+    // const geneScoreSource = seq.calcGeneScore(gene, sourceCodonScores);
+    // const geneScoreTarget  = seq.calcGeneScore(gene, targetCodonScores);
+    // const harmonizedGeneSeq = seq.calcHarmonizedGeneSeq(gene, geneScoreSource, targetCodonScores);
+    // const harmonizedGeneScoreTarget = seq.calcGeneScore(harmonizedGeneSeq, targetCodonScores);
     //...
-    console.log('sourceCodonScores: ', sourceCodonScores);
-    console.log('targetCodonScores: ', targetCodonScores);
-    console.log('geneScoreSource: ', geneScoreSource);
-    console.log('geneScoreTarget: ', geneScoreTarget);
-    console.log('harmonizedGeneSeq: ', harmonizedGeneSeq);
-    console.log('harmonizedGeneScoreTarget: ', harmonizedGeneScoreTarget);
+   
     try {
         //db.saveSeqInput(req.body.gene, req.body.refSource, req.body.refTarget);
         // res.json({
