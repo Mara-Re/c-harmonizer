@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {inputChange, submitInput} from './actions';
 import {Link} from 'react-router-dom';
@@ -19,9 +19,20 @@ export default function DnaInputs() {
             //warnings if input contains characters other than ATCG
             //warnings if not divisible by 3
         }
+        //Put into SESSION STORAGE
+        try {
+            sessionStorage.setItem(e.target.id, e.target.value);
+            console.log('sessionStorage.getItem(e.target.id): ', sessionStorage.getItem(e.target.id));  
+          } catch (e) {
+            console.log('Error sessionStorage: ', e);
+          }
         //put input into redux state:
         dispatch(inputChange(e.target.id, e.target.value));
     };
+
+    useEffect(() => {
+
+    }, []);
 
     //USER DNA INPUT WARNING
     //Does entered DNA sequence start with ATG? -> warning if not
@@ -55,6 +66,7 @@ export default function DnaInputs() {
                 variant='outlined' 
                 id='gene' 
                 label='Your gene of interest'
+                defaultValue={gene}
                 placeholder='ATG...'
                 multiline={true}
                 rows={6}
@@ -69,6 +81,7 @@ export default function DnaInputs() {
                 variant='outlined' 
                 id='refSource' 
                 label='Reference genes for your source organism'
+                defaultValue={refSource}
                 placeholder='ATG...'
                 multiline={true}
                 rows={6}
@@ -83,6 +96,7 @@ export default function DnaInputs() {
                 variant='outlined' 
                 id='refTarget' 
                 label='Reference genes for your target organism'
+                defaultValue={refTarget}
                 placeholder='ATG...'
                 multiline={true}
                 rows={6}

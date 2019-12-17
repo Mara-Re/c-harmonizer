@@ -9,6 +9,7 @@ export default function HarmonizedGene() {
     const harmonizedSeq = useSelector(state => {
         return state.results && state.results.harmonizedGeneSeq
     });
+    
     if (!harmonizedSeq) {
         return null //OR SPINNER!
     }

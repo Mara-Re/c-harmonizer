@@ -1,4 +1,14 @@
-export default function reducer (state = {}, action) {
+const gene = sessionStorage.getItem('gene');
+const refSource = sessionStorage.getItem('refSource');
+const refTarget = sessionStorage.getItem('refTarget');
+const results = sessionStorage.getItem('results') && JSON.parse(`${sessionStorage.getItem('results')}`)
+
+export default function reducer (state = {
+    gene,
+    refSource,
+    refTarget,
+    results
+}, action) {
     console.log('reducer runs!');
 
     if (action.type == 'INPUT_CHANGE') {

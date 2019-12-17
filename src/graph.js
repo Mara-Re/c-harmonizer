@@ -54,14 +54,14 @@ export default function Graph() {
                     labels: labelIndex,
                     datasets: [
                         {
-                            label: "Score Source",
+                            label: "Score in Source Organism",
                             data: geneScoreSource,                            
                             borderColor: 'rgb(0, 0, 0, 0.7)',
                             pointBackgroundColor: 'rgb(0, 0, 0, 0.7)',
                             ...datasetStyles                            
                         },
                         {
-                            label: "Score Target",
+                            label: "Score in Target Organism without Harmonization",
                             data: geneScoreTarget,
                             borderColor: 'rgb(244, 67, 54, 0.7)',
                             pointBackgroundColor: 'rgb(244, 67, 54, 0.5)',
@@ -69,7 +69,7 @@ export default function Graph() {
                             ...datasetStyles,
                         },
                         {
-                            label: "Score Harmonized",
+                            label: "Score for Harmonized Gene",
                             data: harmonizedGeneScoreTarget,
                             borderColor: 'rgb(69, 116, 140, 0.7)',
                             pointBackgroundColor: 'rgb(69, 116, 140, 0.7)',
