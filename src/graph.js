@@ -12,25 +12,28 @@ import {
 } from './hardcoded-examples-frontend';
 //^^^^^^^^FOR TESTING:
 
-Chart.defaults.global.defaultFontFamily = "'Roboto', sans-serif"
+Chart.defaults.global.defaultFontFamily = "'Roboto', sans-serif";
 
 export default function Graph() {
     const stylesChart = useStylesChart();
     const chartRef = useRef();
+
     const geneScoreSource = useSelector(state => {
         return state.results && state.results.geneScoreSource 
     });
+
     const geneScoreTarget = useSelector(state => {
         return state.results && state.results.geneScoreTarget 
     });
+
     const harmonizedGeneScoreTarget = useSelector(state => {
         return state.results && state.results.harmonizedGeneScoreTarget 
     });
-
     
     const labelIndex = geneScoreSource && geneScoreSource.map((el, index) => {
         return index;
     });
+
     const widthOfChart = geneScoreSource && `${geneScoreSource.length * 8}px`;
 
     useEffect(() => {
@@ -44,13 +47,12 @@ export default function Graph() {
                 fill: false,
                 borderWidth: 1,
                 pointRadius: 2
-            }
+            };
             
             new Chart(myChartRef, {
                 type: "line",
                 lineWidth: 100,
                 data: {
-                    //Bring in data
                     labels: labelIndex,
                     datasets: [
                         {
@@ -74,7 +76,7 @@ export default function Graph() {
                             borderColor: 'rgb(69, 116, 140, 0.7)',
                             pointBackgroundColor: 'rgb(69, 116, 140, 0.7)',
                             ...datasetStyles
-                        }
+                        },
                     ]
                 },
                 options: {
@@ -95,7 +97,7 @@ export default function Graph() {
     return (
         <section className={stylesChart.sect}>
             <Typography variant='h6' component='h2' gutterBottom>
-                Gene of Interest Scores
+                Codon Scores for Gene of Interest
             </Typography>
             <div className={stylesChart.container}>
                 <div style={{height: '100%', width: widthOfChart}}>

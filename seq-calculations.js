@@ -74,9 +74,32 @@ function calcHarmonizedGeneSeq(gene, geneScoreSource, targetCodonScores) {
     return harmonizedSeqArr.join('');
 }
 
+//SMOOTHED SCORE ARRAY
+function calcSmoothedScore(geneScoreArray) {
+    let smoothedScoreArr = [];
+    let plusMinus = (19 - 1) / 2;
+    for (let i = 0; i < geneScoreArray.length; i++) {
+        if (i < plusMinus|| i >= geneScoreArray.length - plusMinus) {
+            smoothedScoreArr.push(null);
+        } else {
+            let partialArrOfScores = geneScoreArray.slice(i - plusMinus, i + plusMinus + 1);
+            //partialArrOfScores.length should always equal 19!
+            let sumOfScores = partialArrOfScores.reduce((mean, score) => {
+                return mean + score;
+            });          
+            
+            smoothedScoreArr.push(sumOfScores / 19);
+        }
+    }
+    // console.log('smoothedScoreArr: ', smoothedScoreArr);
+    // console.log('joined smoothedScoreArr: ', smoothedScoreArr.join(' '));
+    return smoothedScoreArr;
+}
+
 module.exports.calcCodonScoreDict = calcCodonScoreDict;
 module.exports.calcHarmonizedGeneSeq = calcHarmonizedGeneSeq;
 module.exports.calcGeneScore = calcGeneScore;
+module.exports.calcSmoothedScore = calcSmoothedScore;
 
 
 function splitDnaIntoCodons(dnaStr) {      
@@ -145,27 +168,7 @@ function translateDna(codonAaDict, codonArr) {
     return translatedDna;
 }
 
-//SMOOTHED SCORE ARRAY
-// function getSmoothedScoreArray(geneScoreArray, oddNrOfCodonsForMean) {
-//     let smoothedScoreArr = [];
-//     let plusMinus = (oddNrOfCodonsForMean - 1) / 2;
-//     for (let i = 0; i < geneScoreArray.length; i++) {
-//         if (i < plusMinus|| i >= geneScoreArray.length - plusMinus) {
-//             smoothedScoreArr.push('');
-//         } else {
-//             let partialArrOfScores = geneScoreArray.slice(i - plusMinus, i + plusMinus + 1);
-//             //partialArrOfScores.length should always equal oddNrOfCodonsForMean!
-//             let sumOfScores = partialArrOfScores.reduce((mean, score) => {
-//                 return mean + score;
-//             });          
-            
-//             smoothedScoreArr.push(sumOfScores / oddNrOfCodonsForMean);
-//         }
-//     }
-//     // console.log('smoothedScoreArr: ', smoothedScoreArr);
-//     // console.log('joined smoothedScoreArr: ', smoothedScoreArr.join(' '));
-//     return smoothedScoreArr;
-// }
+
 
 
 //---------------EXPORTS FOR TESTING---------------

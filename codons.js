@@ -32,7 +32,7 @@ const aminoDict = {
     "Y": ["TAC","TAT"],
 
     // '_' REPRESENTS STOP CODON -> CONVENTION??
-    "_": ["TAG", "TAA", "TGA"]      
+    "*": ["TAG", "TAA", "TGA"]      
 };
 
 const codonAaDict = createCodonAminoDict(aminoDict);

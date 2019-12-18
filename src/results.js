@@ -5,6 +5,7 @@ import {Typography} from '@material-ui/core';
 import Graph from './graph';
 import HarmonizedGene from './harmonized-gene';
 import CodonUsage from './codon-usage';
+import SmoothedScoreGraph from './smoothed-score-graph';
 
 export default function Results() {  
 
@@ -26,7 +27,8 @@ export default function Results() {
             <Typography variant='h4' component='h1' gutterBottom>
                 Results
             </Typography>
-            <HarmonizedGene />            
+            <HarmonizedGene />
+            <SmoothedScoreGraph />            
             <Graph />
             <CodonUsage />
         </>

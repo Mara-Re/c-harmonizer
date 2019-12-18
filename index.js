@@ -49,7 +49,10 @@ app.post('/seq-input.json', async (req, res) => {
     const geneScoreTarget  = seq.calcGeneScore(gene, targetCodonScores);
     const harmonizedGeneSeq = seq.calcHarmonizedGeneSeq(gene, geneScoreSource, targetCodonScores);
     const harmonizedGeneScoreTarget = seq.calcGeneScore(harmonizedGeneSeq, targetCodonScores);
-    //...
+    
+    const geneScoreSourceSmooth = seq.calcSmoothedScore(geneScoreSource);
+    const geneScoreTargetSmooth = seq.calcSmoothedScore(geneScoreTarget);
+    const harmonizedGeneScoreTargetSmooth = seq.calcSmoothedScore(harmonizedGeneScoreTarget);
    
     try {
         // db.saveSeqInput(req.body.gene, req.body.refSource, req.body.refTarget);
@@ -60,7 +63,10 @@ app.post('/seq-input.json', async (req, res) => {
             harmonizedGeneSeq,
             geneScoreSource,
             geneScoreTarget,
-            harmonizedGeneScoreTarget
+            harmonizedGeneScoreTarget,
+            geneScoreSourceSmooth,
+            geneScoreTargetSmooth,
+            harmonizedGeneScoreTargetSmooth
         });
         // res.json({
         //     hardCoded: true,
@@ -95,6 +101,6 @@ app.get('*', function(req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-app.listen(8080, function() {
+app.listen(process.env.PORT || 8080, function() {
     console.log("I'm listening.");
 });
