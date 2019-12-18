@@ -106,7 +106,6 @@ app.post('/api/results/:data', (req, res) => {
     } 
     if (req.params.data == 'gene-scores-smoothed') {
         headerArr = ['smoothed gene score source', 'smoothed gene score target', 'smoothed score harmonized gene'];
-        // return res.send('empty instead of smoothed scores');
         dataStr = prepForFile.createScoreDataStr(headerArr, req.body.geneScoreSourceSmooth, req.body.geneScoreTargetSmooth, req.body.harmonizedGeneScoreTargetSmooth);
     }
     res.send(dataStr);
