@@ -43,6 +43,13 @@ export const useNavbarStyles = makeStyles(theme => ({
 export const useAppStyles = makeStyles(theme => ({
     marginT: {
         marginTop: '30px'
+    },
+    foot: {
+        background: '#45748C',
+        color: '#FFFFFF',
+        height: '40px',
+        display:'flex',
+        alignItems: 'center'
     }
 }));
 

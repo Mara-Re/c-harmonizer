@@ -16,7 +16,7 @@ export default function TableCodonUsage({data}) {
             return {                
                 aA,
                 codon,
-                score: (Math.floor(codonScoreObj[aA][codon] * 100) / 100),
+                score: (Math.floor(codonScoreObj[aA][codon] * 1000) / 1000),
             };
         })];
     }, []);

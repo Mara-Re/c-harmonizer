@@ -39,6 +39,11 @@ export default function App() {
                     />
 
                 </Container>
+                <footer className={appStyles.foot}>
+                    <Container>
+                        footer
+                    </Container>
+                </footer>
             </BrowserRouter>
         </>
     );
