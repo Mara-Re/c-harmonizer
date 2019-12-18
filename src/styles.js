@@ -68,7 +68,8 @@ export const useTextFieldStyles = makeStyles(theme => ({
 
 export const useBtnStyles = makeStyles(theme => ({
     submitBtn: {
-        margin: '0 0 20px'
+        margin: '10px 0 60px',
+        width: '400px'
     }
 }));
 
@@ -86,9 +87,10 @@ export const useStylesChart = makeStyles(theme => ({
 
 export const useStylesTable = makeStyles(theme => ({
     container: {
-        height: '250px',
-        overflowY: 'scroll' ,
-        marginRight: '20px'      
+        width: '60%',
+        minWidth: '400px',
+        overflowY: 'scroll',
+        padding: '10px 0'      
     },
     sect: {
         padding: '50px 0'

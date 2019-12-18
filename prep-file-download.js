@@ -9,4 +9,13 @@ function createScoreDataStr(headerArr, data1, data2, data3) {
     return [headerArr.join('\t'), ...dataArr].join('\n');
 }
 
+function createCodonScoreStr(headerArr, codonScoreArr) {
+    const dataArr = codonScoreArr.map(obj => {
+        return [obj.aA, obj.codon, obj.scoreSource, obj.scoreTarget].join('\t')
+    });
+    console.log('dataArr: ', dataArr);
+    return [headerArr.join('\t'), ...dataArr].join('\n');
+}
+
 module.exports.createScoreDataStr = createScoreDataStr;
+module.exports.createCodonScoreStr = createCodonScoreStr;

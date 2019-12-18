@@ -8,9 +8,6 @@ import {
 import GetAppIcon from '@material-ui/icons/GetApp';
 import {useStylesTable} from './styles.js';
 
-
-
-
 export default function CodonUsage({data}) {
     const stylesTable = useStylesTable();
 
@@ -33,8 +30,8 @@ export default function CodonUsage({data}) {
             return {                
                 aA,
                 codon,
-                scoreSource: (Math.floor(codonScoreObjSource[aA][codon] * 1000) / 1000),
-                scoreTarget: (Math.floor(codonScoreObjTarget[aA][codon] * 1000) / 1000)                
+                scoreSource: (Math.floor(codonScoreObjSource[aA][codon] * 1000) / 1000).toFixed(3),
+                scoreTarget: (Math.floor(codonScoreObjTarget[aA][codon] * 1000) / 1000).toFixed(3)             
             };
         })];
     }, []);
@@ -57,8 +54,8 @@ export default function CodonUsage({data}) {
                 {/* FORM with HIDDEN INPUT FIELDS for POST Request for FILE DOWNLOAD */}
                 <form action='/api/results/codon-scores' method='post'>
                     <input 
-                        name="sourceCodonScores" 
-                        defaultValue={rows} 
+                        name="codonScores" 
+                        defaultValue={JSON.stringify(rows)} 
                         style={{display: 'none'}}
                     />
                     
@@ -70,30 +67,33 @@ export default function CodonUsage({data}) {
                 </form> 
                 
             </Box>
-            <TableContainer component={Paper}>
-                <Table size="small">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Amino Acid</TableCell>
-                            <TableCell align="right">Codon</TableCell>
-                            <TableCell align="right">Score Source Organism</TableCell>                            
-                            <TableCell align="right">Score Target Organism</TableCell>                            
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {rows.map(row => (
-                        <TableRow key={row.codon}>
-                            <TableCell component="th" scope="row">
-                                {row.aA}
-                            </TableCell>
-                            <TableCell align="right">{row.codon}</TableCell>
-                            <TableCell align="right">{row.scoreSource}</TableCell>
-                            <TableCell align="right">{row.scoreTarget}</TableCell>
-                        </TableRow>
-                    ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            <div className={stylesTable.container}>
+
+                <TableContainer component={Paper} >
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Amino Acid</TableCell>
+                                <TableCell align="right">Codon</TableCell>
+                                <TableCell align="right">Score Source Organism</TableCell>                            
+                                <TableCell align="right">Score Target Organism</TableCell>                            
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                        {rows.map(row => (
+                            <TableRow key={row.codon}>
+                                <TableCell component="th" scope="row">
+                                    {row.aA}
+                                </TableCell>
+                                <TableCell align="right">{row.codon}</TableCell>
+                                <TableCell align="right">{row.scoreSource}</TableCell>
+                                <TableCell align="right">{row.scoreTarget}</TableCell>
+                            </TableRow>
+                        ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>
         </section>
     );
 };

@@ -40,9 +40,9 @@ export default function App() {
 
                 </Container>
                 <footer className={appStyles.foot}>
-                    <Container>
+                    {/* <Container>
                         footer
-                    </Container>
+                    </Container> */}
                 </footer>
             </BrowserRouter>
         </>

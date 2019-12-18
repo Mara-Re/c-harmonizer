@@ -106,8 +106,10 @@ export default function DnaInputs() {
                 onChange={e => handleChange(e)}
             />
             <br/>
-            <Link to='/results'>
+            <Link to='/results' style={{textDecoration: 'none'}}>
                 <Button
+                    variant='contained'
+                    color='primary'
                     className={stylesBtn.submitBtn}
                     onClick={() => dispatch(submitInput(gene, refSource, refTarget))}
                 >

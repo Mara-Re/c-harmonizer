@@ -98,7 +98,13 @@ app.post('/api/results/:data', (req, res) => {
     let dataStr;
     if (req.params.data == 'codon-scores') {
         //calculate ...
-        return res.send('empty string');
+        console.log('req.body: ', JSON.parse(`${req.body.codonScores}`));
+        const codonScores = JSON.parse(`${req.body.codonScores}`);
+        headerArr = ['amino acid', 'codon', 'score source', 'score target'];
+        dataStr = prepForFile.createCodonScoreStr(headerArr, codonScores);
+        console.log('dataStr: ', dataStr);
+        // return res.send(dataStr.slice(0, 379)); //works
+        return res.send(dataStr.slice(0, 380)); //does not work -> symbols in textfile instead
     }
     if (req.params.data == 'gene-scores') {
         headerArr = ['gene score source', 'gene score target', 'score harmonized gene'];
