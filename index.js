@@ -20,6 +20,7 @@ const {
 app.use(compression());
 app.use(express.static('./public'));
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 //SETUP FOR BUNDLE-SERVER
 if (process.env.NODE_ENV != 'production') {
@@ -94,7 +95,26 @@ app.post('/seq-input.json', async (req, res) => {
     }
 });
 
+app.post('/api/results', (req, res) => {
+    console.log('post request to /api/results');
+    console.log('req.body: ', req.body);
 
+    function createResultsFile(headerArr, data1, data2, data3) {
+        const splitData1 = data1.split(',');
+        const splitData2 = data2.split(',');
+        const splitData3 = data3.split(',');
+        
+        const dataArr =  splitData1.map((value, i) => {
+            return [value, splitData2[i], splitData3[i]].join('\t');
+        });
+        return [headerArr.join('\t'), ...dataArr].join('\n');
+    }
+
+    const headerArr = ['gene score source', 'gene score target', 'score harmonized gene'];
+    const dataStr = createResultsFile(headerArr, req.body.geneScoreSource, req.body.geneScoreTarget, req.body.harmonizedGeneScoreTarget);
+    res.setHeader('Content-Disposition', 'attachment;filename=filename.txt');
+    res.send(dataStr);
+});
 
 //----------------* ROUTE----------------
 app.get('*', function(req, res) {

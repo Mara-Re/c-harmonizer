@@ -1,8 +1,13 @@
 import React, {useEffect, useRef} from 'react';
 import {useSelector} from 'react-redux'; 
-import {Typography} from '@material-ui/core';
+import {Typography, Button} from '@material-ui/core';
+// import GetAppIcon from '@material-ui/icons/GetApp';
+
+
 import Chart from "chart.js";
 import {useStylesChart} from './styles.js';
+import axios from 'axios';
+
 
 //--------FOR TESTING:
 import {
@@ -89,6 +94,13 @@ export default function Graph() {
             });
         }
     }, [geneScoreSource]);
+
+    async function getResultFile(e) {
+        await axios.post('/api/results', {
+            data: 'data from frontend'
+        });
+        console.log('axios post done!');
+    }
     
     if(!geneScoreSource) {
         return null;
@@ -108,6 +120,26 @@ export default function Graph() {
                     />
                 </div>
             </div>
+            
+            <form action='/api/results' method='post'>
+                <input 
+                    type='text' name="geneScoreSource" 
+                    defaultValue={geneScoreSource} 
+                    style={{display: 'none'}}
+                />
+                <input 
+                    type='text' name="geneScoreTarget" 
+                    defaultValue={geneScoreTarget} 
+                    style={{display: 'none'}}
+                />
+                <input 
+                    type='text' name="harmonizedGeneScoreTarget" 
+                    defaultValue={harmonizedGeneScoreTarget} 
+                    style={{display: 'none'}}
+                />
+                <Button type='submit'>Download results</Button>    
+            </form> 
+                
         </section>
-    )
-}
+    );
+};

@@ -23,9 +23,10 @@ export default function TableCodonUsage({data}) {
     
     useEffect(() => {
         console.log('rows: ', rows);
+        console.log('codonScoreObj: ', codonScoreObj);
     }, [codonScoreObj]);
 
-    if (codonScoreObj == {}) {
+    if (Object.keys(codonScoreObj).length == 0) {
         return null;
     }
 
