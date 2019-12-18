@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import {useSelector} from 'react-redux'; 
-import {Typography, Button, Box, Tooltip, IconButton} from '@material-ui/core';
+import {Typography, Box, Tooltip, IconButton} from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
 
 
@@ -94,13 +94,6 @@ export default function Graph() {
             });
         }
     }, [geneScoreSource]);
-
-    async function getResultFile(e) {
-        await axios.post('/api/results', {
-            data: 'data from frontend'
-        });
-        console.log('axios post done!');
-    }
     
     if(!geneScoreSource) {
         return null;
@@ -114,29 +107,28 @@ export default function Graph() {
                 </Typography>
 
                 {/* FORM with HIDDEN INPUT FIELDS for POST Request for FILE DOWNLOAD */}
-                <form action='/api/results' method='post'>
-                <input 
-                    type='text' name="geneScoreSource" 
-                    defaultValue={geneScoreSource} 
-                    style={{display: 'none'}}
-                />
-                <input 
-                    type='text' name="geneScoreTarget" 
-                    defaultValue={geneScoreTarget} 
-                    style={{display: 'none'}}
-                />
-                <input 
-                    type='text' name="harmonizedGeneScoreTarget" 
-                    defaultValue={harmonizedGeneScoreTarget} 
-                    style={{display: 'none'}}
-                />
-                <Tooltip title="Download scores" placement="right-start">
-                    <IconButton type='submit' aria-label="download scores" style={{marginLeft: '20px'}}>
-                        <GetAppIcon />
-                    </IconButton>
-                </Tooltip>
-            </form> 
-                
+                <form action='/api/results/gene-scores' method='post'>
+                    <input 
+                        type='text' name="geneScoreSource" 
+                        defaultValue={geneScoreSource} 
+                        style={{display: 'none'}}
+                    />
+                    <input 
+                        type='text' name="geneScoreTarget" 
+                        defaultValue={geneScoreTarget} 
+                        style={{display: 'none'}}
+                    />
+                    <input 
+                        type='text' name="harmonizedGeneScoreTarget" 
+                        defaultValue={harmonizedGeneScoreTarget} 
+                        style={{display: 'none'}}
+                    />
+                    <Tooltip title="Download scores" placement="right-start">
+                        <IconButton type='submit' aria-label="download scores" style={{marginLeft: '20px'}}>
+                            <GetAppIcon />
+                        </IconButton>
+                    </Tooltip>
+                </form>                 
             </Box>
             <div className={stylesChart.container}>
                 <div style={{height: '100%', width: widthOfChart}}>

@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const compression = require('compression');
 const seq = require('./seq-calculations');
+const prepForFile = require('./prep-file-download');
 
 
 //----------------FOR TESTING------------------------------
@@ -20,7 +21,7 @@ const {
 app.use(compression());
 app.use(express.static('./public'));
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: false, limit: '200kb'}));
 
 //SETUP FOR BUNDLE-SERVER
 if (process.env.NODE_ENV != 'production') {
@@ -33,10 +34,6 @@ if (process.env.NODE_ENV != 'production') {
 } else {
     app.use('/bundle.js', (req, res) => res.sendFile(`${__dirname}/bundle.js`));
 }
-
-
-
-
 
 //----------------ROUTES----------------
 
@@ -95,24 +92,23 @@ app.post('/seq-input.json', async (req, res) => {
     }
 });
 
-app.post('/api/results', (req, res) => {
-    console.log('post request to /api/results');
-    console.log('req.body: ', req.body);
-
-    function createResultsFile(headerArr, data1, data2, data3) {
-        const splitData1 = data1.split(',');
-        const splitData2 = data2.split(',');
-        const splitData3 = data3.split(',');
-        
-        const dataArr =  splitData1.map((value, i) => {
-            return [value, splitData2[i], splitData3[i]].join('\t');
-        });
-        return [headerArr.join('\t'), ...dataArr].join('\n');
+app.post('/api/results/:data', (req, res) => {
+    res.setHeader('Content-Disposition', `attachment;filename=${req.params.data}.txt`);
+    let headerArr;
+    let dataStr;
+    if (req.params.data == 'codon-scores') {
+        //calculate ...
+        return res.send('empty string');
     }
-
-    const headerArr = ['gene score source', 'gene score target', 'score harmonized gene'];
-    const dataStr = createResultsFile(headerArr, req.body.geneScoreSource, req.body.geneScoreTarget, req.body.harmonizedGeneScoreTarget);
-    res.setHeader('Content-Disposition', 'attachment;filename=filename.txt');
+    if (req.params.data == 'gene-scores') {
+        headerArr = ['gene score source', 'gene score target', 'score harmonized gene'];
+        dataStr = prepForFile.createScoreDataStr(headerArr, req.body.geneScoreSource, req.body.geneScoreTarget, req.body.harmonizedGeneScoreTarget);
+    } 
+    if (req.params.data == 'gene-scores-smoothed') {
+        headerArr = ['smoothed gene score source', 'smoothed gene score target', 'smoothed score harmonized gene'];
+        // return res.send('empty instead of smoothed scores');
+        dataStr = prepForFile.createScoreDataStr(headerArr, req.body.geneScoreSourceSmooth, req.body.geneScoreTargetSmooth, req.body.harmonizedGeneScoreTargetSmooth);
+    }
     res.send(dataStr);
 });
 

@@ -1,6 +1,8 @@
 import React, {useEffect, useRef} from 'react';
 import {useSelector} from 'react-redux'; 
-import {Typography} from '@material-ui/core';
+import {Typography, Box, Tooltip, IconButton} from '@material-ui/core';
+import GetAppIcon from '@material-ui/icons/GetApp';
+
 import Chart from "chart.js";
 import {useStylesChart} from './styles.js';
 
@@ -87,9 +89,37 @@ export default function SmoothedScoreGraph() {
     
     return (
         <section className={stylesChart.sect}>
-            <Typography variant='h6' component='h2' gutterBottom>
-                Smoothed Codon Scores for Gene of Interest
-            </Typography>
+            <Box display='flex' alignItems='center'>
+                <Typography variant='h6' component='h2' gutterBottom>
+                    Smoothed Codon Scores for Gene of Interest
+                </Typography>
+
+                {/* FORM with HIDDEN INPUT FIELDS for POST Request for FILE DOWNLOAD */}
+                <form action='/api/results/gene-scores-smoothed' method='post'>
+                    <input 
+                        type='text' name="geneScoreSourceSmooth" 
+                        defaultValue={geneScoreSourceSmooth} 
+                        style={{display: 'none'}}
+                    />
+                    <input 
+                        type='text' name="geneScoreTargetSmooth" 
+                        defaultValue={geneScoreTargetSmooth} 
+                        style={{display: 'none'}}
+                    />
+                    <input 
+                        type='text' name="harmonizedGeneScoreTargetSmooth" 
+                        defaultValue={harmonizedGeneScoreTargetSmooth} 
+                        style={{display: 'none'}}
+                    />
+                    <Tooltip title="Download smoothed scores" placement="right-start">
+                        <IconButton type='submit' aria-label="download smoothed scores" style={{marginLeft: '20px'}}>
+                            <GetAppIcon />
+                        </IconButton>
+                    </Tooltip>
+                </form> 
+                
+            </Box>
+            
             <div className={stylesChart.container}>
                 <div style={{height: '100%', width: widthOfChart}}>
                     <canvas
