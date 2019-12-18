@@ -1,14 +1,22 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {useSelector} from 'react-redux';
-import {Typography, TextField} from '@material-ui/core';
+import {Typography, TextField, Button} from '@material-ui/core';
 import {useTextFieldStyles } from './styles';
 
 export default function HarmonizedGene() {
     const stylesTextField = useTextFieldStyles();
+    const inputRef = useRef();
 
     const harmonizedSeq = useSelector(state => {
         return state.results && state.results.harmonizedGeneSeq
     });
+
+    const copyToClipBoard = function(e) {
+        inputRef.current.children[1].children[0].select();
+        document.execCommand('copy');
+        inputRef.current.children[1].children[0].click();
+        e.target.focus();
+    };
     
     if (!harmonizedSeq) {
         return null //OR SPINNER!
@@ -29,6 +37,7 @@ export default function HarmonizedGene() {
                 variant='outlined' 
                 id='harmonizedSeq' 
                 label='Harmonized sequence'
+                ref={inputRef}
                 defaultValue={harmonizedSeq}
                 multiline={true}
                 rows={6}
@@ -37,6 +46,7 @@ export default function HarmonizedGene() {
                 inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
 
             />
+            <Button onClick={e => copyToClipBoard(e)}>Copy to Clipboard</Button>
         </>
     );
 }
