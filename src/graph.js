@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import {useSelector} from 'react-redux'; 
-import {Typography, Button} from '@material-ui/core';
-// import GetAppIcon from '@material-ui/icons/GetApp';
+import {Typography, Button, Box, Tooltip, IconButton} from '@material-ui/core';
+import GetAppIcon from '@material-ui/icons/GetApp';
 
 
 import Chart from "chart.js";
@@ -108,20 +108,13 @@ export default function Graph() {
     
     return (
         <section className={stylesChart.sect}>
-            <Typography variant='h6' component='h2' gutterBottom>
-                Codon Scores for Gene of Interest
-            </Typography>
-            <div className={stylesChart.container}>
-                <div style={{height: '100%', width: widthOfChart}}>
-                    <canvas
-                        id="myChart"
-                        ref={chartRef}
-                        style={{textAlign: 'left'}}
-                    />
-                </div>
-            </div>
-            
-            <form action='/api/results' method='post'>
+            <Box display='flex' alignItems='center'>
+                <Typography variant='h6' component='h2' gutterBottom>
+                    Codon Scores for Gene of Interest
+                </Typography>
+
+                {/* FORM with HIDDEN INPUT FIELDS for POST Request for FILE DOWNLOAD */}
+                <form action='/api/results' method='post'>
                 <input 
                     type='text' name="geneScoreSource" 
                     defaultValue={geneScoreSource} 
@@ -137,8 +130,25 @@ export default function Graph() {
                     defaultValue={harmonizedGeneScoreTarget} 
                     style={{display: 'none'}}
                 />
-                <Button type='submit'>Download results</Button>    
+                <Tooltip title="Download scores" placement="right-start">
+                    <IconButton type='submit' aria-label="download scores" style={{marginLeft: '20px'}}>
+                        <GetAppIcon />
+                    </IconButton>
+                </Tooltip>
             </form> 
+                
+            </Box>
+            <div className={stylesChart.container}>
+                <div style={{height: '100%', width: widthOfChart}}>
+                    <canvas
+                        id="myChart"
+                        ref={chartRef}
+                        style={{textAlign: 'left'}}
+                    />
+                </div>
+            </div>
+            
+            
                 
         </section>
     );

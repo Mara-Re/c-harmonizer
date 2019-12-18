@@ -1,7 +1,9 @@
 import React, {useRef} from 'react';
 import {useSelector} from 'react-redux';
-import {Typography, TextField, Button} from '@material-ui/core';
+import {Typography, TextField, IconButton, Tooltip, Box} from '@material-ui/core';
 import {useTextFieldStyles } from './styles';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+
 
 export default function HarmonizedGene() {
     const stylesTextField = useTextFieldStyles();
@@ -30,23 +32,30 @@ export default function HarmonizedGene() {
             <Typography variant='body1' gutterBottom>
                 x codons, harmonized for organismX, source organismY
             </Typography>
-            <TextField 
-                InputProps={{
-                    readOnly: true,
-                }}
-                variant='outlined' 
-                id='harmonizedSeq' 
-                label='Harmonized sequence'
-                ref={inputRef}
-                defaultValue={harmonizedSeq}
-                multiline={true}
-                rows={6}
-                rowsMax={6}
-                className={stylesTextField.margWidth} 
-                inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
+            <Box display='flex' alignItems='center'>
+                <TextField 
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    variant='outlined' 
+                    id='harmonizedSeq' 
+                    label='Harmonized sequence'
+                    ref={inputRef}
+                    defaultValue={harmonizedSeq}
+                    multiline={true}
+                    rows={6}
+                    rowsMax={6}
+                    className={stylesTextField.margWidth} 
+                    inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
 
-            />
-            <Button onClick={e => copyToClipBoard(e)}>Copy to Clipboard</Button>
+                />
+                <Tooltip title="Copy to Clipboard" placement="right-start">
+                    <IconButton aria-label="copy to clipboard"  onClick={e => copyToClipBoard(e)}>
+                        <FileCopyIcon />
+                    </IconButton>
+                </Tooltip>
+                {/* <Button variant="contained" color='primary' onClick={e => copyToClipBoard(e)}><FileCopyIcon/> Copy to Clipboard</Button> */}
+            </Box>
         </>
     );
 }

@@ -62,7 +62,7 @@ export const useTitleSectionStyles = makeStyles(theme => ({
 export const useTextFieldStyles = makeStyles(theme => ({
     margWidth: {
         width: '400px',
-        margin: '20px 0'
+        margin: '20px 20px 20px 0'
     }
 }));
 
