@@ -57,7 +57,11 @@ export const useAppStyles = makeStyles(theme => ({
 
 export const useTitleSectionStyles = makeStyles(theme => ({
     logo: {
-        width: '150px'
+        width: '150px',
+        marginLeft: '100px'
+    },
+    title: {
+        width: '400px'
     }
 }));
 

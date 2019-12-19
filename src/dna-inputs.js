@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {inputChange, submitInput, removeResults} from './actions';
 import {Link} from 'react-router-dom';
-import {TextField, Button} from '@material-ui/core';
+import {TextField, Button, Tooltip, Box, IconButton, Typography} from '@material-ui/core';
+import HelpIcon from '@material-ui/icons/Help';
+
+
 import {useTextFieldStyles, useBtnStyles} from './styles';
 
 let geneCleanedSeq;
@@ -28,7 +31,11 @@ export default function DnaInputs(props) {
         error: false,
         helperTxt: '',
         key: 'key3'
-    });    
+    }); 
+    
+    const [showGeneExplanation, setShowGeneExplanation] = useState(false);
+    const [showRefSourceExplanation, setShowRefSourceExplanation] = useState(false);
+    const [showRefTargetExplanation, setShowRefTargetExplanation] = useState(false);
 
     const gene = useSelector(state => {
         return state.gene;
@@ -68,7 +75,6 @@ export default function DnaInputs(props) {
     useEffect(() => {
         const data = cleanSequence(refSource);
         refSourceCleanedSeq = data && data.cleanedSeq;
-        console.log('error: ', data && data.errors);
         key2Nr = key2Nr + 1;
         if (data && data.errors.length > 0) {
             setErrorRefSource({
@@ -105,7 +111,6 @@ export default function DnaInputs(props) {
     }, [refTarget]);
 
     useEffect(() => {
-        console.log('useEffect of the cleaned genes runs!');
         if (!geneCleanedSeq || !refSourceCleanedSeq || !refTargetCleanedSeq) {
             setButtonIsDisabled(true);
         } else {
@@ -114,11 +119,9 @@ export default function DnaInputs(props) {
     }, [geneCleanedSeq, refSourceCleanedSeq, refTargetCleanedSeq]);
 
     const handleChange = e => {
-        console.log('handleChang runs, e.target.value: ', e.target.value);
         //Put into SESSION STORAGE
         try {
-            sessionStorage.setItem(e.target.id, e.target.value);
-            console.log('sessionStorage.getItem(e.target.id): ', sessionStorage.getItem(e.target.id));  
+            sessionStorage.setItem(e.target.id, e.target.value); 
           } catch (e) {
             console.log('Error sessionStorage: ', e);
           }
@@ -156,32 +159,23 @@ export default function DnaInputs(props) {
 
         //WARNING if input contains characters other than ATCG (U)
         if ((/[^atgcu]/i).test(joinedGenes)) {
-            console.log('WARNING: does not match atgcu!');
-            //--> warning that these characters will be removed
-            //REMOVE CHARACTERS
             errors.push('Your sequence contains characters other than ATGC/AUGC which will be ignored.')
+            //REMOVE CHARACTERS
             joinedGenes = joinedGenes.replace(/[^atgcu]/ig, '');
-            console.log('characters replaced!: ', joinedGenes);
         }
 
         //WARNING: input DNA sequence is not divisible by 3
         if (joinedGenes.length % 3 != 0) {
-            console.log('warning: not devisible by 3!');
-            //WARNING that these characters will be ignored;   
             //REMOVE x characters at the end of the sequence!
             const x = joinedGenes.length % 3;
             errors.push('Your gene sequence is not divisible by 3. Therefore, the last ' + x + ' bases will be ignored.');     
             joinedGenes = joinedGenes.slice(0, joinedGenes.length - x);
-            console.log('joinedGenes after char removing: ', joinedGenes);
         }
         
         //WARNING: input DNA sequence does not start with A
-        console.log('joinedGenes before ATG check: ', joinedGenes);
         if (!joinedGenes.startsWith('ATG')) {
-            console.log('WARNING: sequence does not start with a start codon');
             errors.push('Your sequence does not start with a start codon.');
         }
-        console.log('----------------------------------');
         return {
             cleanedSeq: joinedGenes,
             errors: errors
@@ -203,63 +197,127 @@ export default function DnaInputs(props) {
         props.history.push('/results');
         dispatch(submitInput(gene, refSource, refTarget));
     }
+
+    function toggleGeneExplanation() {
+        setShowGeneExplanation(!showGeneExplanation);
+    }
+
+    function toggleRefSourceExplanation() {
+        setShowRefSourceExplanation(!showRefSourceExplanation);
+    }
+
+    function toggleRefTargetExplanation() {
+        setShowRefTargetExplanation(!showRefTargetExplanation);
+    }
+
     
 
     return (
         <section>
-            <TextField 
-                error={errorGene.error}
-                helperText={errorGene.helperTxt}
-                key={errorGene.key}
-                autoComplete='off' 
-                variant='outlined' 
-                id='gene' 
-                label='Your gene of interest'
-                defaultValue={gene}
-                placeholder='ATG...'
-                multiline={true}
-                rows={6}
-                rowsMax={6}
-                className={stylesTextField.margWidth} 
-                inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
-                onChange={e => handleChange(e)}
-            />
+            <Box display='flex' alignItems='center'>
+                <TextField 
+                    error={errorGene.error}
+                    helperText={errorGene.helperTxt}
+                    key={errorGene.key}
+                    autoComplete='off' 
+                    variant='outlined' 
+                    id='gene' 
+                    label='Your gene of interest'
+                    defaultValue={gene}
+                    placeholder='ATG...'
+                    multiline={true}
+                    rows={6}
+                    rowsMax={6}
+                    className={stylesTextField.margWidth} 
+                    inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
+                    onChange={e => handleChange(e)}
+                />
+                
+                <Tooltip title="Explanation" placement="right-start">
+                    <IconButton aria-label="explanation" color='primary'  onClick={e => toggleGeneExplanation()}>
+                        <HelpIcon />
+                    </IconButton>
+                </Tooltip>
+                {showGeneExplanation && 
+                    <div style={{width: '300px', marginLeft: '20px'}}>
+                        <Typography variant='body2' color='primary' gutterBottom>
+                            Enter a native DNA sequence of a gene which you want to transfer from a source to a target organism. Enter plain DNA sequence or fasta format.
+                        </Typography>
+                    </div>                
+                }    
+            </Box>
+            
             <br/>
-            <TextField 
-                error={errorRefSource.error}
-                helperText={errorRefSource.helperTxt}
-                key={errorRefSource.key}
-                autoComplete='off' 
-                variant='outlined' 
-                id='refSource' 
-                label='Reference genes for your source organism'
-                defaultValue={refSource}
-                placeholder='ATG...'
-                multiline={true}
-                rows={6}
-                rowsMax={6}
-                className={stylesTextField.margWidth} 
-                inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
-                onChange={e => handleChange(e)}
-            />
+            <Box display='flex' alignItems='center'>
+                <TextField 
+                    error={errorRefSource.error}
+                    helperText={errorRefSource.helperTxt}
+                    key={errorRefSource.key}
+                    autoComplete='off' 
+                    variant='outlined' 
+                    id='refSource' 
+                    label='Reference genes for your source organism'
+                    defaultValue={refSource}
+                    placeholder='ATG...'
+                    multiline={true}
+                    rows={6}
+                    rowsMax={6}
+                    className={stylesTextField.margWidth} 
+                    inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
+                    onChange={e => handleChange(e)}
+                />
+                
+                <Tooltip title="Explanation" placement="right-start">
+                    <IconButton aria-label="explanation" color='primary' onClick={e => toggleRefSourceExplanation(e)}>
+                        <HelpIcon />
+                    </IconButton>
+                </Tooltip>
+                {showRefSourceExplanation && 
+                    <div style={{width: '300px', marginLeft: '20px'}}>
+                        <Typography variant='body2' color='primary' gutterBottom>
+                            Enter a set of genes which are highly expressed in your source organism. 
+                            For example about 10-15 genes encoding for ribosomal or glycolytic proteins. 
+                            Enter plain DNA sequences beneath each other or sequences in fasta format.
+                        </Typography>
+                    </div>                
+                }                
+            </Box>
+        
             <br/>
-            <TextField 
-                error={errorRefTarget.error}
-                helperText={errorRefTarget.helperTxt}
-                key={errorRefTarget.key}
-                autoComplete='off' 
-                variant='outlined' 
-                id='refTarget' 
-                label='Reference genes for your target organism'
-                defaultValue={refTarget}
-                placeholder='ATG...'
-                multiline={true}
-                rows={6}
-                rowsMax={6}
-                className={stylesTextField.margWidth} 
-                inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
-                onChange={e => handleChange(e)}
-            />
+            
+            <Box display='flex' alignItems='center'>
+                <TextField 
+                    error={errorRefTarget.error}
+                    helperText={errorRefTarget.helperTxt}
+                    key={errorRefTarget.key}
+                    autoComplete='off' 
+                    variant='outlined' 
+                    id='refTarget' 
+                    label='Reference genes for your target organism'
+                    defaultValue={refTarget}
+                    placeholder='ATG...'
+                    multiline={true}
+                    rows={6}
+                    rowsMax={6}
+                    className={stylesTextField.margWidth} 
+                    inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
+                    onChange={e => handleChange(e)}
+                />                
+                <Tooltip title="Explanation" placement="right-start">
+                    <IconButton aria-label="explanation" color='primary' onClick={e => toggleRefTargetExplanation()}>
+                        <HelpIcon />
+                    </IconButton>
+                </Tooltip>
+                {showRefTargetExplanation && 
+                    <div style={{width: '300px', marginLeft: '20px'}}>
+                        <Typography variant='body2' color='primary' gutterBottom>
+                            Enter a set of genes which are highly expressed in your target organism. 
+                            For example about 10-15 genes encoding for ribosomal or glycolytic proteins. 
+                            Enter plain DNA sequences beneath each other or sequences in fasta format.                        </Typography>
+                    </div>                
+                }                
+            </Box>
+            
             <br/>
                 <Button
                     variant='contained'

@@ -1,22 +1,23 @@
 import React from 'react';
-import {Typography} from '@material-ui/core';
+import {Typography, Box} from '@material-ui/core';
 import {useTitleSectionStyles} from './styles';
 
 export default function TitleSection() {
     const titleSectionStyles = useTitleSectionStyles();
     return (
         <section>
-            {/* <Box display='flex'>
+            <Box display='flex'>
+                <div className={titleSectionStyles.title}>
+                    <Typography variant='h3' component='h1'gutterBottom>
+                        c.Harmonizer
+                    </Typography>
+                    <Typography variant='h6' component='h2' gutterBottom>
+                        Codon harmonizer tool - optimize your gene depending on source and target organism Codon Usages
+                    </Typography>                    
+                </div>                
+                <img className={titleSectionStyles.logo} src="/dna.png"></img>                       
 
-            </Box> */}
-            <Typography variant='h3' component='h1'gutterBottom>
-                c.Harmonizer
-            </Typography>
-            <Typography variant='h6' component='h2'gutterBottom>
-                My description of c.harmonizer
-            </Typography>
-            
-            <img className={titleSectionStyles.logo} src="/dna.png"></img>                       
+            </Box>
 
         </section>
     )

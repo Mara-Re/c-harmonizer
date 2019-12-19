@@ -29,9 +29,9 @@ export default function HarmonizedGene() {
             <Typography variant='h6' component='h2' gutterBottom>
                 Harmonized Gene of Interest
             </Typography>
-            <Typography variant='body1' gutterBottom>
+            {/* <Typography variant='body1' gutterBottom>
                 x codons, harmonized for organismX, source organismY
-            </Typography>
+            </Typography> */}
             <Box display='flex' alignItems='center'>
                 <TextField 
                     InputProps={{

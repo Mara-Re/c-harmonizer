@@ -6,6 +6,7 @@ import {useAppStyles} from './styles';
 import Navbar from './navbar';
 import TitleSection from './title-section';
 import DnaInputs from './dna-inputs';
+import OrganismInputs from './organism-inputs';
 import Results from './results';
 
 import {useGlobalStyles } from './styles';
@@ -25,6 +26,7 @@ export default function App(props) {
                         render={(props) => (
                             <>
                                 <TitleSection />
+                                <OrganismInputs />
                                 <DnaInputs {...props} />
                             </>
                         )}
