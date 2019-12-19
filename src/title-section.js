@@ -12,10 +12,10 @@ export default function TitleSection() {
                         c.Harmonizer
                     </Typography>
                     <Typography variant='h6' component='h2' gutterBottom>
-                        Codon harmonizer tool - optimize your gene depending on source and target organism Codon Usages
+                        Codon harmonizer tool - optimize your gene depending on source and target organism codon usages
                     </Typography>                    
                 </div>                
-                <img className={titleSectionStyles.logo} src="/dna.png"></img>                       
+                <img className={titleSectionStyles.logo} style={{height: '130px'}} src="/dna.png"></img>                       
 
             </Box>
 

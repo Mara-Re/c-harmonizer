@@ -57,11 +57,14 @@ export const useAppStyles = makeStyles(theme => ({
 
 export const useTitleSectionStyles = makeStyles(theme => ({
     logo: {
-        width: '150px',
-        marginLeft: '100px'
+        // width: '120px',
+        // heigth: '80px',
+        marginLeft: '100px',
+        marginTop: '20px'
     },
     title: {
-        width: '400px'
+        width: '400px',
+        marginBottom: '50px'
     }
 }));
 
