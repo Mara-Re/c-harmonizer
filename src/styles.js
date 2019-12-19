@@ -49,7 +49,9 @@ export const useAppStyles = makeStyles(theme => ({
         color: '#FFFFFF',
         height: '40px',
         display:'flex',
-        alignItems: 'center'
+        alignItems: 'center', 
+        position: 'absolute',
+        bottom: '0'
     }
 }));
 

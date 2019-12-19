@@ -25,7 +25,7 @@ export default function CodonUsage({data}) {
         return state.results.targetCodonScores;
     });
 
-    const rows = Object.keys(codonScoreObjSource).reduce((arr, aA) => {
+    const rows = codonScoreObjSource && Object.keys(codonScoreObjSource).reduce((arr, aA) => {
         return [...arr, ...Object.keys(codonScoreObjSource[aA]).map(codon => {
             return {                
                 aA,
@@ -40,7 +40,7 @@ export default function CodonUsage({data}) {
         console.log('rows: ', rows);
     }, [codonScoreObjSource]);
 
-    if (Object.keys(codonScoreObjSource).length == 0) {
+    if (!codonScoreObjSource || Object.keys(codonScoreObjSource).length == 0) {
         return null;
     }
 

@@ -6,6 +6,9 @@ export default function TitleSection() {
     const titleSectionStyles = useTitleSectionStyles();
     return (
         <section>
+            {/* <Box display='flex'>
+
+            </Box> */}
             <Typography variant='h3' component='h1'gutterBottom>
                 c.Harmonizer
             </Typography>

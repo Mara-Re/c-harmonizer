@@ -1,8 +1,6 @@
-//import axios from './axios';
 import axios from 'axios';
 
 export function inputChange(inputName, inputValue) {
-    console.log('action creator inputChange runs');
     return {
         type: 'INPUT_CHANGE',
         inputValue,
@@ -10,16 +8,26 @@ export function inputChange(inputName, inputValue) {
     };
 };
 
-export async function submitInput(gene, refSource, refTarget) {
-    console.log('action creator submitInput runs');
-    const {data} = await axios.post('/seq-input.json', {
-        gene,
-        refSource,
-        refTarget
-    });
-    console.log('data from axios post /seq-input.json: ', data);
+export function removeResults() {
     return {
-        type: 'SUBMIT_INPUT',
-        results: data
+        type: 'REMOVE_RESULTS',
+        results: {}
     };
+};
+
+export async function submitInput(gene, refSource, refTarget) {    
+    try {
+        const {data} = await axios.post('/seq-input.json', {
+            gene,
+            refSource,
+            refTarget
+        });
+        return {
+            type: 'SUBMIT_INPUT',
+            results: data
+        };
+    } catch(err) {
+        console.log('error in action creator submitInput');
+        //HANDLE ERROR: REDIRECT TO /
+    }
 };

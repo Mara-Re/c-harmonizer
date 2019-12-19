@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import {useSelector} from 'react-redux'; 
 import {Typography} from '@material-ui/core';
-
 import Graph from './graph';
 import HarmonizedGene from './harmonized-gene';
 import CodonUsage from './codon-usage';
@@ -21,6 +20,9 @@ export default function Results() {
           }
     }, [results]);
   
+    if (!results) {
+        return null;
+    }
 
     return (
         <>  

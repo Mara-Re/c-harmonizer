@@ -27,6 +27,13 @@ export default function reducer (state = {
         };
     }
 
+    if (action.type == 'REMOVE_RESULTS') {
+        state = {
+            ...state,
+            results: action.results
+        };
+    }
+
     console.log(' new state: ', state);
     return state;
 };

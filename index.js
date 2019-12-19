@@ -38,22 +38,20 @@ if (process.env.NODE_ENV != 'production') {
 //----------------ROUTES----------------
 
 //----------------SEQ INPUT----------------
-app.post('/seq-input.json', async (req, res) => {
-    //ALL CALCULATIONS
-    const {gene, refSource, refTarget} = req.body;
-    const sourceCodonScores = seq.calcCodonScoreDict(refSource);
-    const targetCodonScores = seq.calcCodonScoreDict(refTarget);
-    const geneScoreSource = seq.calcGeneScore(gene, sourceCodonScores);
-    const geneScoreTarget  = seq.calcGeneScore(gene, targetCodonScores);
-    const harmonizedGeneSeq = seq.calcHarmonizedGeneSeq(gene, geneScoreSource, targetCodonScores);
-    const harmonizedGeneScoreTarget = seq.calcGeneScore(harmonizedGeneSeq, targetCodonScores);
-    
-    const geneScoreSourceSmooth = seq.calcSmoothedScore(geneScoreSource);
-    const geneScoreTargetSmooth = seq.calcSmoothedScore(geneScoreTarget);
-    const harmonizedGeneScoreTargetSmooth = seq.calcSmoothedScore(harmonizedGeneScoreTarget);
-   
+app.post('/seq-input.json', async (req, res) => {    
     try {
-        // db.saveSeqInput(req.body.gene, req.body.refSource, req.body.refTarget);
+        //ALL CALCULATIONS
+        const {gene, refSource, refTarget} = req.body;
+        const sourceCodonScores = seq.calcCodonScoreDict(refSource);
+        const targetCodonScores = seq.calcCodonScoreDict(refTarget);
+        const geneScoreSource = seq.calcGeneScore(gene, sourceCodonScores);
+        const geneScoreTarget  = seq.calcGeneScore(gene, targetCodonScores);
+        const harmonizedGeneSeq = seq.calcHarmonizedGeneSeq(gene, geneScoreSource, targetCodonScores);
+        const harmonizedGeneScoreTarget = seq.calcGeneScore(harmonizedGeneSeq, targetCodonScores);
+        
+        const geneScoreSourceSmooth = seq.calcSmoothedScore(geneScoreSource);
+        const geneScoreTargetSmooth = seq.calcSmoothedScore(geneScoreTarget);
+        const harmonizedGeneScoreTargetSmooth = seq.calcSmoothedScore(harmonizedGeneScoreTarget);
         res.json({
             success: true,
             sourceCodonScores,
@@ -66,28 +64,16 @@ app.post('/seq-input.json', async (req, res) => {
             geneScoreTargetSmooth,
             harmonizedGeneScoreTargetSmooth
         });
-        // res.json({
-        //     hardCoded: true,
-        //     sourceCodonScores: sourceCodonScoresEx,
-        //     targetCodonScores:targetCodonScoresEx,
-        //     harmonizedGeneSeq: harmonizedSeqEx,
-        //     geneScoreSource: geneScoreSourceEx,
-        //     geneScoreTarget: geneScoreTargetEx,
-        //     harmonizedGeneScoreTarget: harmonizedGeneScoreTargetEx
-        // });
-        
-
-
     } catch (err) {
         console.log('err in saveSeqInput: ', err);
         res.json({
             error: true,
-            sourceCodonScores,
-            targetCodonScores,
-            harmonizedGeneSeq,
-            geneScoreSource,
-            geneScoreTarget,
-            harmonizedGeneScoreTarget
+            // sourceCodonScores,
+            // targetCodonScores,
+            // harmonizedGeneSeq,
+            // geneScoreSource,
+            // geneScoreTarget,
+            // harmonizedGeneScoreTarget
         });
     }
 });

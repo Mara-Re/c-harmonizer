@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {inputChange, submitInput} from './actions';
+import {inputChange, submitInput, removeResults} from './actions';
 import {Link} from 'react-router-dom';
 import {TextField, Button} from '@material-ui/core';
 import {useTextFieldStyles, useBtnStyles} from './styles';
@@ -13,103 +13,22 @@ export default function DnaInputs(props) {
     const stylesTextField = useTextFieldStyles();
     const stylesBtn = useBtnStyles();
     const dispatch = useDispatch();
-
-    // function cleanSequence(userInput) {
-    //     if (userInput == '' || userInput.trim() == '') {
-    //         return;
-    //     }
-        
-    // }
-
-    const handleChange = e => {
-        console.log('handleChang runs, e.target.value: ', e.target.value);
-        //ADD changes to Input here, e.g. display of Codons?
-
-        if (e.target.id == 'gene' ||e.target.id == 'refSource' ||e.target.id == 'refTarget') {
-            if (e.target.value !== '') {
-                
-                //THIS HANDLING SHOULD BE MOVED TO useEffect!!?
-                
-                //if input is not empty:
-    
-                //-----FASTA handling---- do not modify input for the state, just do analysis for Warnings
-                let seqArr = e.target.value.split('\n'); //split on new lines -> to check for fasta
-                let geneArr;
-                let joinedGenes;
-                if (seqArr[0].startsWith('>')) {        //if gene or ref genes are entered in fasta format
-                    geneArr = seqArr.reduce((acc, el) => {
-                        if (el.startsWith('>')) {
-                            return [...acc, []];
-                        } else {                //returns an array of all the genes
-                            return [...acc.splice(0, acc.length -1), acc[acc.length -1] + el];
-                        }
-                    }, []);
-                    console.log('geneArr: ', geneArr);                    
-                    joinedGenes = geneArr.join('');
-                } else {    
-                    joinedGenes = e.target.value;
-                }
-                //replace whitespace characters, convert to upper case and replace rna (U) to dna (T)
-                joinedGenes = joinedGenes.replace(/\s/g,"").toUpperCase().replace(/U/g, 'T');
-
-                
-                //------USER DNA INPUT WARNINGS
-
-                //WARNING if input contains characters other than ATCG (U)
-                if ((/[^atgcu]/i).test(joinedGenes)) {
-                    console.log('WARNING: does not match atgcu!');
-                    //--> warning that these characters will be removed
-                    //REMOVE CHARACTERS
-                    joinedGenes = joinedGenes.replace(/[^atgcu]/ig, '');
-                    console.log('characters replaced!: ', joinedGenes);
-                }
-
-                //WARNING: input DNA sequence is not divisible by 3
-                if (joinedGenes.length % 3 != 0) {
-                    console.log('warning: not devisible by 3!');     
-                    //WARNING that these characters will be ignored;   
-                    //REMOVE x characters at the end of the sequence!
-                    const x = joinedGenes.length % 3;
-                    joinedGenes = joinedGenes.slice(0, joinedGenes.length - x);
-                    console.log('joinedGenes after char removing: ', joinedGenes);
-                }
-                
-                //WARNING: input DNA sequence does not start with A
-                if (!joinedGenes.startsWith('ATG')) {
-                    console.log('WARNING: sequence does not start with a start codon');
-                }
-
-                //FOR GENE, optional
-                // if (e.target.id == 'gene') {
-                //     //if entered DNA contains stop codons -> warn user and ask whether they want to proceed
-                // } 
-                //FOR REFS, optional
-                //Checking for Start/Stop codons only if fasta format was entered!
-                console.log('joinedGenes: ', joinedGenes);
-                if (e.target.id == 'gene') {
-                    console.log('e.target.id == gene')
-                    geneCleanedSeq = joinedGenes;
-                } else if (e.target.id == 'refSource') {
-                    refSourceCleanedSeq = joinedGenes;
-                } else if (e.target.id == 'refTarget') {
-                    refTargetCleanedSeq = joinedGenes;
-                }
-                
-            }
-        }
-        //Put into SESSION STORAGE
-        try {
-            sessionStorage.setItem(e.target.id, e.target.value);
-            console.log('sessionStorage.getItem(e.target.id): ', sessionStorage.getItem(e.target.id));  
-          } catch (e) {
-            console.log('Error sessionStorage: ', e);
-          }
-        //put input into REDUX STATE:
-        dispatch(inputChange(e.target.id, e.target.value));
-    };
-
-    
-
+    const [buttonIsDisabled, setButtonIsDisabled] = useState(true);
+    const [errorGene, setErrorGene] = useState({
+        error: false,
+        helperTxt: '',
+        key: 'key1'
+    });
+    const [errorRefSource, setErrorRefSource] = useState({
+        error: false,
+        helperTxt: '',
+        key: 'key2'
+    });
+    const [errorRefTarget, setErrorRefTarget] = useState({
+        error: false,
+        helperTxt: '',
+        key: 'key3'
+    });    
 
     const gene = useSelector(state => {
         return state.gene;
@@ -121,17 +40,166 @@ export default function DnaInputs(props) {
 
     const refTarget = useSelector(state => {
         return state.refTarget;
-    });
+    }); 
+       
+    let key1Nr = 0;
+    let key2Nr = 0;
+    let key3Nr = 0;
+
+    useEffect(() => {
+        const data = cleanSequence(gene);
+        geneCleanedSeq = data && data.cleanedSeq;
+        key1Nr = key1Nr + 1;
+        if (data && data.errors && data.errors.length > 0) {
+            setErrorGene({
+                error: true,
+                helperTxt: data.errors.join(' '),
+                key: `key1${key1Nr + 1}`
+            });
+        } else {
+            setErrorGene({
+                error: false,
+                helperTxt: '',
+                key: `key1${key1Nr + 1}`
+            });
+        }
+    }, [gene]);
+
+    useEffect(() => {
+        const data = cleanSequence(refSource);
+        refSourceCleanedSeq = data && data.cleanedSeq;
+        console.log('error: ', data && data.errors);
+        key2Nr = key2Nr + 1;
+        if (data && data.errors.length > 0) {
+            setErrorRefSource({
+                error: true,
+                helperTxt: data.errors.join(' '),
+                key: `key2${key2Nr + 1}`
+            });
+        } else {
+            setErrorRefSource({
+                error: false,
+                helperTxt: '',
+                key: `key2${key2Nr + 1}`
+            });
+        }
+    }, [refSource]);
+
+    useEffect(() => {
+        const data = cleanSequence(refTarget);
+        refTargetCleanedSeq = data && data.cleanedSeq;
+        key3Nr = key3Nr + 1;
+        if (data && data.errors.length > 0) {
+            setErrorRefTarget({
+                error: true,
+                helperTxt: data.errors.join(' '),
+                key: `key3${key3Nr + 1}`
+            });
+        } else {
+            setErrorRefTarget({
+                error: false,
+                helperTxt: '',
+                key: `key3${key3Nr + 1}`
+            });
+        }
+    }, [refTarget]);
+
+    useEffect(() => {
+        console.log('useEffect of the cleaned genes runs!');
+        if (!geneCleanedSeq || !refSourceCleanedSeq || !refTargetCleanedSeq) {
+            setButtonIsDisabled(true);
+        } else {
+            setButtonIsDisabled(false);
+        }
+    }, [geneCleanedSeq, refSourceCleanedSeq, refTargetCleanedSeq]);
+
+    const handleChange = e => {
+        console.log('handleChang runs, e.target.value: ', e.target.value);
+        //Put into SESSION STORAGE
+        try {
+            sessionStorage.setItem(e.target.id, e.target.value);
+            console.log('sessionStorage.getItem(e.target.id): ', sessionStorage.getItem(e.target.id));  
+          } catch (e) {
+            console.log('Error sessionStorage: ', e);
+          }
+        //put input into REDUX STATE:
+        dispatch(inputChange(e.target.id, e.target.value));
+    };
+
+    function cleanSequence(userInput) {
+        if (!userInput || userInput == '' || userInput.trim() == '') {
+            return undefined;
+        }
+        //if input is not empty:    
+        //-----FASTA handling---- do not modify input for the state, just do analysis for Warnings
+        let seqArr = userInput.split('\n'); //split on new lines -> to check for fasta
+        let geneArr;
+        let joinedGenes;
+        let errors = [];
+        if (seqArr[0].startsWith('>')) {        //if gene or ref genes are entered in fasta format
+            geneArr = seqArr.reduce((acc, el) => {
+                if (el.startsWith('>')) {
+                    return [...acc, []];
+                } else {                //returns an array of all the genes
+                    return [...acc.splice(0, acc.length -1), acc[acc.length -1] + el];
+                }
+            }, []);           
+            joinedGenes = geneArr.join('');
+        } else {    
+            joinedGenes = userInput;
+        }
+        //replace whitespace characters, convert to upper case and replace rna (U) to dna (T)
+        joinedGenes = joinedGenes.replace(/\s/g,"").toUpperCase().replace(/U/g, 'T');
+
+        
+        //------USER DNA INPUT WARNINGS
+
+        //WARNING if input contains characters other than ATCG (U)
+        if ((/[^atgcu]/i).test(joinedGenes)) {
+            console.log('WARNING: does not match atgcu!');
+            //--> warning that these characters will be removed
+            //REMOVE CHARACTERS
+            errors.push('Your sequence contains characters other than ATGC/AUGC which will be ignored.')
+            joinedGenes = joinedGenes.replace(/[^atgcu]/ig, '');
+            console.log('characters replaced!: ', joinedGenes);
+        }
+
+        //WARNING: input DNA sequence is not divisible by 3
+        if (joinedGenes.length % 3 != 0) {
+            console.log('warning: not devisible by 3!');
+            //WARNING that these characters will be ignored;   
+            //REMOVE x characters at the end of the sequence!
+            const x = joinedGenes.length % 3;
+            errors.push('Your gene sequence is not divisible by 3. Therefore, the last ' + x + ' bases will be ignored.');     
+            joinedGenes = joinedGenes.slice(0, joinedGenes.length - x);
+            console.log('joinedGenes after char removing: ', joinedGenes);
+        }
+        
+        //WARNING: input DNA sequence does not start with A
+        console.log('joinedGenes before ATG check: ', joinedGenes);
+        if (!joinedGenes.startsWith('ATG')) {
+            console.log('WARNING: sequence does not start with a start codon');
+            errors.push('Your sequence does not start with a start codon.');
+        }
+        console.log('----------------------------------');
+        return {
+            cleanedSeq: joinedGenes,
+            errors: errors
+        };
+
+        //FOR GENE, optional
+        //if entered DNA contains stop codons -> warn user and ask whether they want to proceed
+        //FOR REFS, optional
+        //Checking for Start/Stop codons only if fasta format was entered!
+    }    
 
     function checkAndSubmitInput(gene, refSource, refTarget) {
         //handle empty input:
-        console.log('gene: ', gene);
-        console.log('refSource: ', refSource);
-        console.log('refTarget: ', refTarget);
         if (!gene || !refSource || !refTarget) {
-            console.log('gene empty!');
             return;
         }
+        sessionStorage.removeItem('results');
+        dispatch(removeResults());
         props.history.push('/results');
         dispatch(submitInput(gene, refSource, refTarget));
     }
@@ -140,6 +208,9 @@ export default function DnaInputs(props) {
     return (
         <section>
             <TextField 
+                error={errorGene.error}
+                helperText={errorGene.helperTxt}
+                key={errorGene.key}
                 autoComplete='off' 
                 variant='outlined' 
                 id='gene' 
@@ -155,6 +226,9 @@ export default function DnaInputs(props) {
             />
             <br/>
             <TextField 
+                error={errorRefSource.error}
+                helperText={errorRefSource.helperTxt}
+                key={errorRefSource.key}
                 autoComplete='off' 
                 variant='outlined' 
                 id='refSource' 
@@ -170,6 +244,9 @@ export default function DnaInputs(props) {
             />
             <br/>
             <TextField 
+                error={errorRefTarget.error}
+                helperText={errorRefTarget.helperTxt}
+                key={errorRefTarget.key}
                 autoComplete='off' 
                 variant='outlined' 
                 id='refTarget' 
@@ -187,6 +264,7 @@ export default function DnaInputs(props) {
                 <Button
                     variant='contained'
                     color='primary'
+                    disabled={buttonIsDisabled}
                     className={stylesBtn.submitBtn}
                     onClick={() => checkAndSubmitInput(geneCleanedSeq, refSourceCleanedSeq, refTargetCleanedSeq)}
                 >
