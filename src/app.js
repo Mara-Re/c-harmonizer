@@ -11,7 +11,7 @@ import Results from './results';
 import {useGlobalStyles } from './styles';
 
 
-export default function App() {
+export default function App(props) {
     const globalStyles = useGlobalStyles();
     const appStyles = useAppStyles();
     return (
@@ -22,10 +22,10 @@ export default function App() {
                 <Container className={appStyles.marginT}>
                     <Route
                         exact path='/'
-                        render={() => (
+                        render={(props) => (
                             <>
                                 <TitleSection />
-                                <DnaInputs />
+                                <DnaInputs {...props} />
                             </>
                         )}
                     />
