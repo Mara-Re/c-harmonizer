@@ -39,6 +39,27 @@ export default function App(props) {
                             </>
                         )}
                     />
+                    <Route
+                        exact path='/example'
+                        render={(props) => (
+                            <>
+                                <TitleSection />
+                                <OrganismInputs example={true}/>
+                                <DnaInputs 
+                                    {...props} 
+                                    example={true}
+                                />
+                            </>
+                        )}
+                    />
+                    <Route
+                        exact path='/example/results'
+                        render={() => (
+                            <>
+                                <Results example={true}/>
+                            </>
+                        )}
+                    />
 
                 </Container>
                 <footer className={appStyles.foot}>

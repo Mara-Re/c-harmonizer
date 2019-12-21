@@ -1,6 +1,8 @@
 import React from 'react';
 import {useNavbarStyles} from './styles';
 import { Typography, AppBar, Toolbar, Container } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+
 
 export default function Navbar(props) {
     const navbarStyles = useNavbarStyles();
@@ -10,12 +12,19 @@ export default function Navbar(props) {
                 <div className={navbarStyles.flexContainer}>
                     <Toolbar className={navbarStyles.noPadding}>
                         {/* <img className={navbarStyles.navbarLogo} src="/dna.png"></img>                        */}
-                        <Typography variant="h6" >
-                            c.Harmonizer
-                        </Typography>
+                        <Link to='/' className={navbarStyles.noTextDec}>
+                            <Typography variant="h6" className={navbarStyles.navbarText}>
+                                c.Harmonizer
+                            </Typography>
+                        </Link>
                     </Toolbar>
                     <Toolbar className={navbarStyles.noPadding}>
-                        {/* LINKS TO NAVIGATE */}
+                        <Link to='/example' className={navbarStyles.noTextDec}>
+                            <Typography variant="button" className={navbarStyles.navbarText}>
+                                Example
+                            </Typography>                 
+                        </Link>
+                        
                     </Toolbar>
                                 
                 </div>

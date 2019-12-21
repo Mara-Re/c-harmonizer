@@ -4,6 +4,7 @@ import {inputChange, submitInput, removeResults} from './actions';
 import {Link} from 'react-router-dom';
 import {TextField, Button, Tooltip, Box, IconButton, Typography} from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
+import {exampleGene, exampleRefSource, exampleRefTarget} from './example';
 
 
 import {useTextFieldStyles, useBtnStyles} from './styles';
@@ -191,11 +192,15 @@ export default function DnaInputs(props) {
         //handle empty input:
         if (!gene || !refSource || !refTarget) {
             return;
+        } else if (props.example) {
+            props.history.push('/example/results');
+            // dispatch(submitExampleInput(exampleGene, exampleRefSource, exampleRefTarget));
+            return;
         }
         sessionStorage.removeItem('results');
         dispatch(removeResults());
-        props.history.push('/results');
         dispatch(submitInput(gene, refSource, refTarget));
+        props.history.push('/results');
     }
 
     function toggleGeneExplanation() {
@@ -215,7 +220,10 @@ export default function DnaInputs(props) {
     return (
         <section>
             <Box display='flex' alignItems='center'>
-                <TextField 
+                <TextField
+                   InputProps={{
+                        readOnly: props.example,
+                    }}
                     error={errorGene.error}
                     helperText={errorGene.helperTxt}
                     key={errorGene.key}
@@ -223,14 +231,16 @@ export default function DnaInputs(props) {
                     variant='outlined' 
                     id='gene' 
                     label='Your gene of interest'
-                    defaultValue={gene}
+                    defaultValue={(!props.example && gene) || exampleGene}
                     placeholder='ATG...'
                     multiline={true}
                     rows={6}
                     rowsMax={6}
                     className={stylesTextField.margWidth} 
                     inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
-                    onChange={e => handleChange(e)}
+                    onChange={e => {
+                        !props.example && handleChange(e)
+                    }}
                 />
                 
                 <Tooltip title="Explanation" placement="right-start">
@@ -249,7 +259,10 @@ export default function DnaInputs(props) {
             
             <br/>
             <Box display='flex' alignItems='center'>
-                <TextField 
+                <TextField
+                    InputProps={{
+                        readOnly: props.example,
+                    }} 
                     error={errorRefSource.error}
                     helperText={errorRefSource.helperTxt}
                     key={errorRefSource.key}
@@ -257,14 +270,16 @@ export default function DnaInputs(props) {
                     variant='outlined' 
                     id='refSource' 
                     label='Reference genes for your source organism'
-                    defaultValue={refSource}
+                    defaultValue={(!props.example && refSource) || exampleRefSource}
                     placeholder='ATG...'
                     multiline={true}
                     rows={6}
                     rowsMax={6}
                     className={stylesTextField.margWidth} 
                     inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
-                    onChange={e => handleChange(e)}
+                    onChange={e => {
+                        !props.example && handleChange(e)
+                    }}
                 />
                 
                 <Tooltip title="Explanation" placement="right-start">
@@ -287,6 +302,9 @@ export default function DnaInputs(props) {
             
             <Box display='flex' alignItems='center'>
                 <TextField 
+                    InputProps={{
+                        readOnly: props.example,
+                    }}
                     error={errorRefTarget.error}
                     helperText={errorRefTarget.helperTxt}
                     key={errorRefTarget.key}
@@ -294,14 +312,16 @@ export default function DnaInputs(props) {
                     variant='outlined' 
                     id='refTarget' 
                     label='Reference genes for your target organism'
-                    defaultValue={refTarget}
+                    defaultValue={(!props.example && refTarget) || exampleRefTarget}
                     placeholder='ATG...'
                     multiline={true}
                     rows={6}
                     rowsMax={6}
                     className={stylesTextField.margWidth} 
                     inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
-                    onChange={e => handleChange(e)}
+                    onChange={e => {
+                        !props.example && handleChange(e)
+                    }}
                 />                
                 <Tooltip title="Explanation" placement="right-start">
                     <IconButton aria-label="explanation" color='primary' onClick={e => toggleRefTargetExplanation()}>

@@ -37,6 +37,19 @@ export const useNavbarStyles = makeStyles(theme => ({
     },
     noPadding: {
         padding: '0'
+    },
+    navbarText: {
+        paddingRight: '20px',
+        cursor: 'pointer',
+        '&:hover': {
+            color: '#cfd8dc',
+            textDecoration: 'none'
+        },
+        color: theme.palette.primary.contrastText,
+        textDecoration: 'none'
+    },
+    noTextDec: {
+        textDecoration: 'none'
     }
 }));
 
@@ -105,4 +118,5 @@ export const useStylesTable = makeStyles(theme => ({
         padding: '50px 0'
     }
 }));
+
 
