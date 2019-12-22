@@ -190,13 +190,14 @@ export default function DnaInputs(props) {
 
     function checkAndSubmitInput(gene, refSource, refTarget) {
         //handle empty input:
-        if (!gene || !refSource || !refTarget) {
-            return;
-        } else if (props.example) {
+        if (props.example) {
             props.history.push('/example/results');
             // dispatch(submitExampleInput(exampleGene, exampleRefSource, exampleRefTarget));
             return;
         }
+        if (!gene || !refSource || !refTarget) {
+            return;
+        } 
         sessionStorage.removeItem('results');
         dispatch(removeResults());
         dispatch(submitInput(gene, refSource, refTarget));
@@ -224,8 +225,8 @@ export default function DnaInputs(props) {
                    InputProps={{
                         readOnly: props.example,
                     }}
-                    error={errorGene.error}
-                    helperText={errorGene.helperTxt}
+                    error={(!props.example && errorGene.error)}
+                    helperText={(!props.example && errorGene.helperTxt)}
                     key={errorGene.key}
                     autoComplete='off' 
                     variant='outlined' 
@@ -243,7 +244,7 @@ export default function DnaInputs(props) {
                     }}
                 />
                 
-                <Tooltip title="Explanation" placement="right-start">
+                <Tooltip title="Explanation" placement="top">
                     <IconButton aria-label="explanation" color='primary'  onClick={e => toggleGeneExplanation()}>
                         <HelpIcon />
                     </IconButton>
@@ -263,8 +264,8 @@ export default function DnaInputs(props) {
                     InputProps={{
                         readOnly: props.example,
                     }} 
-                    error={errorRefSource.error}
-                    helperText={errorRefSource.helperTxt}
+                    error={(!props.example && errorRefSource.error)}
+                    helperText={(!props.example && errorRefSource.helperTxt)}
                     key={errorRefSource.key}
                     autoComplete='off' 
                     variant='outlined' 
@@ -282,7 +283,7 @@ export default function DnaInputs(props) {
                     }}
                 />
                 
-                <Tooltip title="Explanation" placement="right-start">
+                <Tooltip title="Explanation" placement="top">
                     <IconButton aria-label="explanation" color='primary' onClick={e => toggleRefSourceExplanation(e)}>
                         <HelpIcon />
                     </IconButton>
@@ -305,8 +306,8 @@ export default function DnaInputs(props) {
                     InputProps={{
                         readOnly: props.example,
                     }}
-                    error={errorRefTarget.error}
-                    helperText={errorRefTarget.helperTxt}
+                    error={(!props.example && errorRefTarget.error)}
+                    helperText={(!props.example && errorRefTarget.helperTxt)}
                     key={errorRefTarget.key}
                     autoComplete='off' 
                     variant='outlined' 
@@ -323,7 +324,7 @@ export default function DnaInputs(props) {
                         !props.example && handleChange(e)
                     }}
                 />                
-                <Tooltip title="Explanation" placement="right-start">
+                <Tooltip title="Explanation" placement="top">
                     <IconButton aria-label="explanation" color='primary' onClick={e => toggleRefTargetExplanation()}>
                         <HelpIcon />
                     </IconButton>

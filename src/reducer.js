@@ -2,7 +2,7 @@ const gene = sessionStorage.getItem('gene');
 const refSource = sessionStorage.getItem('refSource');
 const refTarget = sessionStorage.getItem('refTarget');
 const sourceOrganism = sessionStorage.getItem('sourceOrganism');
-const targetOranism = sessionStorage.getItem('targetOranism');
+const targetOrganism = sessionStorage.getItem('targetOrganism');
 const results = sessionStorage.getItem('results') && JSON.parse(`${sessionStorage.getItem('results')}`)
 
 export default function reducer (state = {
@@ -10,7 +10,7 @@ export default function reducer (state = {
     refSource,
     refTarget,
     sourceOrganism,
-    targetOranism,
+    targetOrganism,
     results
 }, action) {
     console.log('reducer runs!');

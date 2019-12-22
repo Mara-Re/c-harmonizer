@@ -3,11 +3,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {inputChange, submitInput, removeResults} from './actions';
 import {Link} from 'react-router-dom';
 import {TextField, Box, Typography} from '@material-ui/core';
+import {exampleSourceOrganism, exampleTargetOrganism} from './example';
 
 
 import {useTextFieldStyles} from './styles';
 
-export default function OrganismInputs() {
+export default function OrganismInputs(props) {
     const dispatch = useDispatch();
     const stylesTextField = useTextFieldStyles();
     const sourceOrganism = useSelector(state => {
@@ -17,6 +18,7 @@ export default function OrganismInputs() {
         return state.targetOrganism;
     });
     const handleChange = e => {
+        console.log('handleChange in organismInputs runs!');
         //Put into SESSION STORAGE
         try {
             sessionStorage.setItem(e.target.id, e.target.value); 
@@ -30,27 +32,37 @@ export default function OrganismInputs() {
     return(
         <section>
             <TextField
+                InputProps={{
+                    readOnly: props.example,
+                }} 
                 autoComplete='off' 
                 variant='outlined' 
                 id='sourceOrganism' 
                 label='Your source organism'
-                defaultValue={sourceOrganism}
+                defaultValue={(!props.example && sourceOrganism) || exampleSourceOrganism}
                 placeholder='e.g. Fragaria ananassa'
                 className={stylesTextField.margWidth} 
                 inputProps={{style: {fontFamily:'Roboto mono, monospace', fontStyle: 'italic'}}}
-                onChange={e => handleChange(e)}
+                onChange={e => {
+                    !props.example && handleChange(e)
+                }}
             />
             <br/>
             <TextField
+                InputProps={{
+                    readOnly: props.example,
+                }} 
                 autoComplete='off' 
                 variant='outlined' 
                 id='targetOrganism' 
                 label='Your target organism'
-                defaultValue={targetOrganism}
+                defaultValue={(!props.example && targetOrganism) || exampleTargetOrganism}
                 placeholder='e.g. Escherichia coli'
                 className={stylesTextField.margWidth} 
                 inputProps={{style: {fontFamily:'Roboto mono, monospace', fontStyle: 'italic'}}}
-                onChange={e => handleChange(e)}
+                onChange={e => {
+                    !props.example && handleChange(e)
+                }}
             />
 
         </section>

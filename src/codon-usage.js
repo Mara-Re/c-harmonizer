@@ -7,25 +7,34 @@ import {
 } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import {useStylesTable} from './styles.js';
+import {exampleResults} from './example';
 
-export default function CodonUsage({data}) {
+
+export default function CodonUsage(props) {
     const stylesTable = useStylesTable();
 
-    console.log('data: ', data);
+    console.log('data: ', props.data);
     const codonScoreObjSource = useSelector(state => {
+        if (props.example) {
+            return exampleResults.sourceCodonScores;
+        }
         if (!state.results) {
             return {}
         }
         return state.results.sourceCodonScores;
     });
     const codonScoreObjTarget = useSelector(state => {
+        if (props.example) {
+            return exampleResults.targetCodonScores;
+        }
         if (!state.results) {
             return {}
         }
         return state.results.targetCodonScores;
     });
 
-    const rows = codonScoreObjSource && Object.keys(codonScoreObjSource).reduce((arr, aA) => {
+    const rows = codonScoreObjSource &&
+     Object.keys(codonScoreObjSource).reduce((arr, aA) => {
         return [...arr, ...Object.keys(codonScoreObjSource[aA]).map(codon => {
             return {                
                 aA,

@@ -4,6 +4,8 @@ const compression = require('compression');
 const seq = require('./seq-calculations');
 const prepForFile = require('./prep-file-download');
 
+//To save results in a file -> to use in 'example.js' in frontend
+const fs = require('fs');
 
 //----------------FOR TESTING------------------------------
 const {
@@ -52,7 +54,7 @@ app.post('/seq-input.json', async (req, res) => {
         const geneScoreSourceSmooth = seq.calcSmoothedScore(geneScoreSource);
         const geneScoreTargetSmooth = seq.calcSmoothedScore(geneScoreTarget);
         const harmonizedGeneScoreTargetSmooth = seq.calcSmoothedScore(harmonizedGeneScoreTarget);
-        res.json({
+        const results = {
             success: true,
             sourceCodonScores,
             targetCodonScores,
@@ -63,7 +65,18 @@ app.post('/seq-input.json', async (req, res) => {
             geneScoreSourceSmooth,
             geneScoreTargetSmooth,
             harmonizedGeneScoreTargetSmooth
-        });
+        };
+        //to save results in file -> to use in 'example.js' in frontend
+        fs.writeFile("test.json", JSON.stringify(results), function(err) {
+            if(err) {
+                return console.log(err);
+            }
+            console.log("The file was saved!");
+        }); 
+
+        res.json(
+            results
+        );
     } catch (err) {
         console.log('err in saveSeqInput: ', err);
         res.json({

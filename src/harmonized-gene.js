@@ -3,14 +3,18 @@ import {useSelector} from 'react-redux';
 import {Typography, TextField, IconButton, Tooltip, Box} from '@material-ui/core';
 import {useTextFieldStyles } from './styles';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import {exampleResults} from './example';
 
 
-export default function HarmonizedGene() {
+export default function HarmonizedGene(props) {
     const stylesTextField = useTextFieldStyles();
     const inputRef = useRef();
 
     const harmonizedSeq = useSelector(state => {
-        return state.results && state.results.harmonizedGeneSeq
+        if (props.example) {
+            return exampleResults.harmonizedGeneSeq;
+        }
+        return state.results && state.results.harmonizedGeneSeq;
     });
 
     const copyToClipBoard = function(e) {

@@ -7,6 +7,8 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import Chart from "chart.js";
 import {useStylesChart} from './styles.js';
 import axios from 'axios';
+import {exampleResults} from './example';
+
 
 
 //--------FOR TESTING:
@@ -19,19 +21,28 @@ import {
 
 Chart.defaults.global.defaultFontFamily = "'Roboto', sans-serif";
 
-export default function Graph() {
+export default function Graph(props) {
     const stylesChart = useStylesChart();
     const chartRef = useRef();
 
     const geneScoreSource = useSelector(state => {
+        if (props.example) {
+            return exampleResults.geneScoreSource
+        }
         return state.results && state.results.geneScoreSource 
     });
 
     const geneScoreTarget = useSelector(state => {
+        if (props.example) {
+            return exampleResults.geneScoreTarget
+        }
         return state.results && state.results.geneScoreTarget 
     });
 
     const harmonizedGeneScoreTarget = useSelector(state => {
+        if (props.example) {
+            return exampleResults.harmonizedGeneScoreTarget
+        }
         return state.results && state.results.harmonizedGeneScoreTarget 
     });
     
@@ -39,7 +50,14 @@ export default function Graph() {
         return index;
     });
 
-    const widthOfChart = geneScoreSource && `${geneScoreSource.length * 8}px`;
+    const widthOfChart = geneScoreSource && calcWidthOfChart(geneScoreSource);
+
+    function calcWidthOfChart(dataArr) {
+        if (dataArr.length < 100) {
+            return '80%';
+        }
+        return `${dataARr.length * 8}px`;
+    }
 
     useEffect(() => {
         

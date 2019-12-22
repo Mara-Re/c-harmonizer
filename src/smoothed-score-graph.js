@@ -5,23 +5,34 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 
 import Chart from "chart.js";
 import {useStylesChart} from './styles.js';
+import {exampleResults} from './example';
+
 
 Chart.defaults.global.defaultFontFamily = "'Roboto', sans-serif"
 // Chart.defaults.global.elements.line.tension = 0;
 
-export default function SmoothedScoreGraph() {
+export default function SmoothedScoreGraph(props) {
     const stylesChart = useStylesChart();
     const chartRef = useRef();
     
     const geneScoreSourceSmooth = useSelector(state => {
+        if (props.example) {
+            return exampleResults.geneScoreSourceSmooth
+        }
         return state.results && state.results.geneScoreSourceSmooth 
     });
 
     const geneScoreTargetSmooth = useSelector(state => {
+        if (props.example) {
+            return exampleResults.geneScoreTargetSmooth
+        }
         return state.results && state.results.geneScoreTargetSmooth 
     });
 
     const harmonizedGeneScoreTargetSmooth = useSelector(state => {
+        if (props.example) {
+            return exampleResults.harmonizedGeneScoreTargetSmooth
+        }
         return state.results && state.results.harmonizedGeneScoreTargetSmooth 
     });
     
@@ -29,7 +40,14 @@ export default function SmoothedScoreGraph() {
         return index;
     });
 
-    const widthOfChart = geneScoreSourceSmooth && `${geneScoreSourceSmooth.length}px`;
+    const widthOfChart = geneScoreSourceSmooth && calcWidthOfChart(geneScoreSourceSmooth);
+
+    function calcWidthOfChart(dataArr) {
+        if (dataArr.length < 1000) {
+            return '80%';
+        }
+        return `${dataARr.length}px`;
+    }
 
     useEffect(() => {
         
