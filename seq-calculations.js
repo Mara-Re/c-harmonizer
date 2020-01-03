@@ -15,14 +15,14 @@ function calcCodonScoreDict(refGene) {
     // console.log('refGene: ', refGene);
     const codonArr = splitDnaIntoCodons(refGene);
     const codonCounts = countAllCodons(codonArr);
-    const codonScores = calcCodonScores(codonCounts);
+    const rcaScores = calcRelCodonAdaptScores(codonCounts);
 
     let scoreDict = {};
     for (const aA in aminoDict) {             //also requires aminoDict
         let obj = {};
         for (let i = 0; i < aminoDict[aA].length; i++) {
             let codon = aminoDict[aA][i];
-            obj[codon] = codonScores[codon];
+            obj[codon] = rcaScores[codon];
         }
         scoreDict[aA] = obj;
     }
@@ -37,7 +37,7 @@ function calcCodonScoreDict(refGene) {
     //   D: { GAC: 0.49, GAT: 0.51 },
     //    ...
     // }
-
+    console.log('scoreDict: ', scoreDict);
     return scoreDict;
 }
 
@@ -159,6 +159,55 @@ function calcCodonScores(codonCounts) {        //also requires aminoDict
     return codonScores;
 }
 
+function calcRelCodonAdaptScores (codonCounts) { //also requires aminoDict
+    let rcaScores; 
+    for (const aA in aminoDict) {     //looping through all amino acids
+       
+        const countOfMostFrequentCodon = aminoDict[aA].reduce((acc, el) => {
+            if (codonCounts[el] > acc) {
+                return codonCounts[el];
+            } else {
+                return acc;
+            }
+        }, 0);
+
+        console.log('countOfMostFrequentCodon: ', countOfMostFrequentCodon);
+
+        rcaScores = aminoDict[aA].reduce((acc, el) => {
+            if (countOfMostFrequentCodon == 0) {
+                return {...acc, [el] : 1};
+            } else {
+                const rcaScore = codonCounts[el] / countOfMostFrequentCodon;
+                return {...acc, [el] : rcaScore};
+            }
+        }, {...rcaScores});
+
+        // for (let i = 0; i < aminoDict[aA].length; i++) {
+        //     if (countOfMostFrequentCodon == 0) {       //if the amino acid was never encoded
+        //         relCodonAdaptScores[aminoDict[aA][i]] = 1;  //set all scores to 1 
+        //     } else {
+        //         relCodonAdaptScores[aminoDict[aA][i]] = codonCounts[aminoDict[aA][i]] / countOfMostFrequentCodon;
+        //     }
+
+        // }
+
+        // for  (let i = 0; i < aminoDict[aA].length; i++) {      //first loop to determine amount of codons encoding one spedific amino acid
+        //     codonSumPerAa += codonCounts[aminoDict[aA][i]];  //codonCounts of the current amino acid
+        // }
+        // console.log('aA & codonSumPerAa: ', aA, codonSumPerAa);
+        // for  (let i = 0; i < aminoDict[aA].length; i++) {       //second loop to determine score of each of the codons
+        //     if (codonSumPerAa == 0) {       //if the amino acid was never encoded
+        //         codonScores[aminoDict[aA][i]] = 0;  //set all scores to 0 --
+        //         //???? OR SET TO 1/(NR of CODONS)????
+        //     } else {
+        //         codonScores[aminoDict[aA][i]] = codonCounts[aminoDict[aA][i]] / codonSumPerAa;
+        //     }
+        // }        
+    }
+    console.log('rcaScores: ', rcaScores);
+    return rcaScores;
+}
+
 //TRANSLATE DNA
 function translateDna(codonAaDict, codonArr) {
     const translatedDna = codonArr.reduce((translStr, codon) => {
@@ -174,5 +223,6 @@ function translateDna(codonAaDict, codonArr) {
 //---------------EXPORTS FOR TESTING---------------
 module.exports.splitDnaIntoCodons = splitDnaIntoCodons;
 module.exports.countAllCodons = countAllCodons;
-module.exports.calcCodonScores = calcCodonScores;
+// module.exports.calcCodonScores = calcCodonScores;
+// module.exports.calcRelCodonAdaptScores = calcRelCodonAdaptScores;
 // module.exports.translateDna = translateDna;
