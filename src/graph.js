@@ -56,7 +56,7 @@ export default function Graph(props) {
         if (dataArr.length < 100) {
             return '80%';
         }
-        return `${dataARr.length * 8}px`;
+        return `${dataArr.length * 8}px`;
     }
 
     useEffect(() => {

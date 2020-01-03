@@ -232,7 +232,7 @@ export default function DnaInputs(props) {
                     variant='outlined' 
                     id='gene' 
                     label='Your gene of interest'
-                    defaultValue={(!props.example && gene) || exampleGene}
+                    defaultValue={(!props.example && gene) || (props.example && exampleGene)}
                     placeholder='ATG...'
                     multiline={true}
                     rows={6}
@@ -271,7 +271,7 @@ export default function DnaInputs(props) {
                     variant='outlined' 
                     id='refSource' 
                     label='Reference genes for your source organism'
-                    defaultValue={(!props.example && refSource) || exampleRefSource}
+                    defaultValue={(!props.example && refSource) || (props.example && exampleRefSource)}
                     placeholder='ATG...'
                     multiline={true}
                     rows={6}
@@ -313,7 +313,7 @@ export default function DnaInputs(props) {
                     variant='outlined' 
                     id='refTarget' 
                     label='Reference genes for your target organism'
-                    defaultValue={(!props.example && refTarget) || exampleRefTarget}
+                    defaultValue={(!props.example && refTarget) || (props.example && exampleRefTarget)}
                     placeholder='ATG...'
                     multiline={true}
                     rows={6}

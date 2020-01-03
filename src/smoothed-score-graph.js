@@ -46,7 +46,7 @@ export default function SmoothedScoreGraph(props) {
         if (dataArr.length < 1000) {
             return '80%';
         }
-        return `${dataARr.length}px`;
+        return `${dataArr.length}px`;
     }
 
     useEffect(() => {

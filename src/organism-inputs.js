@@ -39,7 +39,7 @@ export default function OrganismInputs(props) {
                 variant='outlined' 
                 id='sourceOrganism' 
                 label='Your source organism'
-                defaultValue={(!props.example && sourceOrganism) || exampleSourceOrganism}
+                defaultValue={(!props.example && sourceOrganism) || (props.example && exampleSourceOrganism)}
                 placeholder='e.g. Fragaria ananassa'
                 className={stylesTextField.margWidth} 
                 inputProps={{style: {fontFamily:'Roboto mono, monospace', fontStyle: 'italic'}}}
@@ -56,7 +56,7 @@ export default function OrganismInputs(props) {
                 variant='outlined' 
                 id='targetOrganism' 
                 label='Your target organism'
-                defaultValue={(!props.example && targetOrganism) || exampleTargetOrganism}
+                defaultValue={(!props.example && targetOrganism) || (props.example && exampleTargetOrganism)}
                 placeholder='e.g. Escherichia coli'
                 className={stylesTextField.margWidth} 
                 inputProps={{style: {fontFamily:'Roboto mono, monospace', fontStyle: 'italic'}}}
