@@ -6,7 +6,7 @@ import HarmonizedGene from './harmonized-gene';
 import CodonUsage from './codon-usage';
 import SmoothedScoreGraph from './smoothed-score-graph';
 
-export default function Results() {  
+export default function Results({example}) {  
 
     const results = useSelector(state => {
         return state.results 
@@ -27,7 +27,7 @@ export default function Results() {
     return (
         <>  
             <Typography variant='h4' component='h1' gutterBottom>
-                Results
+                {example && 'Example '}Results
             </Typography>
             <HarmonizedGene />
             <SmoothedScoreGraph />            

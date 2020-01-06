@@ -5,6 +5,14 @@ import {Link} from 'react-router-dom';
 import {TextField, Button, Tooltip, Box, IconButton, Typography} from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
 import {exampleGene, exampleRefSource, exampleRefTarget} from './example';
+import {
+    geneExplanation, 
+    geneExampleExplanation, 
+    refSourceExplanation, 
+    refSourceExampleExplanation, 
+    refTargetExplanation, 
+    refTargetExampleExplanation
+} from './input-explanations';
 
 
 import {useTextFieldStyles, useBtnStyles} from './styles';
@@ -252,7 +260,7 @@ export default function DnaInputs(props) {
                 {showGeneExplanation && 
                     <div style={{width: '300px', marginLeft: '20px'}}>
                         <Typography variant='body2' color='primary' gutterBottom>
-                            Enter a native DNA sequence of a gene which you want to transfer from a source to a target organism. Enter plain DNA sequence or fasta format.
+                            {(props.example && geneExampleExplanation) || geneExplanation} 
                         </Typography>
                     </div>                
                 }    
@@ -291,9 +299,7 @@ export default function DnaInputs(props) {
                 {showRefSourceExplanation && 
                     <div style={{width: '300px', marginLeft: '20px'}}>
                         <Typography variant='body2' color='primary' gutterBottom>
-                            Enter a set of genes which are highly expressed in your source organism. 
-                            For example about 10-15 genes encoding for ribosomal or glycolytic proteins. 
-                            Enter plain DNA sequences beneath each other or sequences in fasta format.
+                            {(props.example && refSourceExampleExplanation) || refSourceExplanation} 
                         </Typography>
                     </div>                
                 }                
@@ -332,9 +338,7 @@ export default function DnaInputs(props) {
                 {showRefTargetExplanation && 
                     <div style={{width: '300px', marginLeft: '20px'}}>
                         <Typography variant='body2' color='primary' gutterBottom>
-                            Enter a set of genes which are highly expressed in your target organism. 
-                            For example about 10-15 genes encoding for ribosomal or glycolytic proteins. 
-                            Enter plain DNA sequences beneath each other or sequences in fasta format.                        </Typography>
+                            {(props.example && refTargetExampleExplanation) || refTargetExplanation}                         </Typography>
                     </div>                
                 }                
             </Box>
@@ -347,7 +351,7 @@ export default function DnaInputs(props) {
                     className={stylesBtn.submitBtn}
                     onClick={() => checkAndSubmitInput(geneCleanedSeq, refSourceCleanedSeq, refTargetCleanedSeq)}
                 >
-                    Submit
+                    {(props.example && 'Show Example Results') || 'Submit'}
                 </Button>
         </section>
     );
