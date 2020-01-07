@@ -13,10 +13,8 @@ export default function reducer (state = {
     targetOrganism,
     results
 }, action) {
-    console.log('reducer runs!');
 
     if (action.type == 'INPUT_CHANGE') {
-        console.log('INPUT_CHANGE');
         state = {
             ...state,
             [action.inputName]: action.inputValue
@@ -24,7 +22,6 @@ export default function reducer (state = {
     }
 
     if (action.type == 'SUBMIT_INPUT') {
-        console.log('SUBMIT_INPUT');
         state = {
             ...state,
             results: action.results
@@ -38,6 +35,5 @@ export default function reducer (state = {
         };
     }
 
-    console.log(' new state: ', state);
     return state;
 };

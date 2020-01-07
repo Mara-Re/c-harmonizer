@@ -61,7 +61,6 @@ export default function Graph(props) {
 
     useEffect(() => {
         
-        console.log('chartRef.current: ', chartRef.current);
         if (chartRef.current) {
 
             const myChartRef = chartRef.current.getContext("2d");

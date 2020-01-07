@@ -49,9 +49,7 @@ export default function SmoothedScoreGraph(props) {
         return `${dataArr.length}px`;
     }
 
-    useEffect(() => {
-        
-        console.log('chartRef.current: ', chartRef.current);
+    useEffect(() => {        
         if (chartRef.current) {
 
             const myChartRef = chartRef.current.getContext("2d");

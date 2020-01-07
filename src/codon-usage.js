@@ -13,7 +13,6 @@ import {exampleResults} from './example';
 export default function CodonUsage(props) {
     const stylesTable = useStylesTable();
 
-    console.log('data: ', props.data);
     const codonScoreObjSource = useSelector(state => {
         if (props.example) {
             return exampleResults.sourceCodonScores;
@@ -46,7 +45,6 @@ export default function CodonUsage(props) {
     }, []);
     
     useEffect(() => {
-        console.log('rows: ', rows);
     }, [codonScoreObjSource]);
 
     if (!codonScoreObjSource || Object.keys(codonScoreObjSource).length == 0) {

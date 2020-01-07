@@ -13,7 +13,6 @@ function createCodonScoreStr(headerArr, codonScoreArr) {
     const dataArr = codonScoreArr.map(obj => {
         return [obj.aA, obj.codon, obj.scoreSource, obj.scoreTarget].join('\t')
     });
-    console.log('dataArr: ', dataArr);
     return [headerArr.join('\t'), ...dataArr].join('\n');
 }
 
