@@ -8,14 +8,14 @@ export default function TitleSection() {
         <section>
             <Box display='flex'>
                 <div className={titleSectionStyles.title}>
-                    <Typography variant='h3' component='h1'gutterBottom>
-                        c.Harmonizer
+                    <Typography variant='h3' component='h1'gutterBottom> 
+                        Codon harmonizer tool
                     </Typography>
-                    <Typography variant='h6' component='h2' gutterBottom>
-                        Codon harmonizer tool - optimize your gene depending on source and target organism codon usages
+                    <Typography variant='h6' component='h2' gutterBottom className={titleSectionStyles.margTop}>
+                        Optimize your gene depending on source and target organism codon usages
                     </Typography>                    
                 </div>                
-                <img className={titleSectionStyles.logo} style={{height: '130px'}} src="/dna.png"></img>                       
+                {/* <img className={titleSectionStyles.logo} style={{height: '130px'}} src="/dna.png"></img>                        */}
 
             </Box>
 

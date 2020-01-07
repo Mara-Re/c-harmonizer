@@ -21,7 +21,6 @@ const {
 
 //----------------MIDDLEWARE----------------
 app.use(compression());
-app.use(express.static('./public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false, limit: '200kb'}));
 
