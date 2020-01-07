@@ -355,7 +355,7 @@ export default function DnaInputs(props) {
             <Button
                 variant='contained'
                 color='primary'
-                disabled={buttonIsDisabled}
+                disabled={(props.example && false) || buttonIsDisabled}
                 className={stylesBtn.submitBtn}
                 onClick={() => checkAndSubmitInput(geneCleanedSeq, refSourceCleanedSeq, refTargetCleanedSeq)}
             >
