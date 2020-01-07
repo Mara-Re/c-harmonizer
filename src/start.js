@@ -32,11 +32,11 @@ const theme = createMuiTheme({
 
 ReactDOM.render(
     <Provider store={store}>
-      <StylesProvider injectFirst>
+      {/* <StylesProvider injectFirst> */}
         <ThemeProvider theme={theme}>
             <App />
         </ThemeProvider>
-      </StylesProvider>
+      {/* </StylesProvider> */}
     </Provider>,
     document.querySelector('main')
 );
