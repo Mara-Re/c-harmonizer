@@ -4,6 +4,7 @@ import {inputChange, submitInput, removeResults} from './actions';
 import {Link} from 'react-router-dom';
 import {TextField, Button, Tooltip, Box, IconButton, Typography} from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
+import {cleanSequence} from './input-handling';
 import {exampleGene, exampleRefSource, exampleRefTarget} from './example';
 import {
     geneExplanation, 
@@ -16,13 +17,15 @@ import {
 
 import { makeStyles } from '@material-ui/core/styles';
 
-const useTextFieldStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
     margWidth: {
         width: '400px',
         margin: '20px 20px 20px 0'
-    }
-}));
-const useBtnStyles = makeStyles(theme => ({
+    },
+    expl: {
+        width: '300px', 
+        marginLeft: '20px'
+    },
     submitBtn: {
         margin: '10px 0 60px',
         width: '400px'
@@ -34,8 +37,7 @@ let refSourceCleanedSeq;
 let refTargetCleanedSeq;
 
 export default function DnaInputs(props) {
-    const stylesTextField = useTextFieldStyles();
-    const stylesBtn = useBtnStyles();
+    const styles = useStyles();
     const dispatch = useDispatch();
     const [buttonIsDisabled, setButtonIsDisabled] = useState(true);
     const [errorGene, setErrorGene] = useState({
@@ -150,64 +152,6 @@ export default function DnaInputs(props) {
         dispatch(inputChange(e.target.id, e.target.value));
     };
 
-    function cleanSequence(userInput) {
-        if (!userInput || userInput == '' || userInput.trim() == '') {
-            return undefined;
-        }
-        //if input is not empty:    
-        //-----FASTA handling--------- 
-        let seqArr = userInput.trim().split('\n'); //split on new lines -> to check for fasta
-        let geneArr;
-        let joinedGenes;
-        let errors = [];
-        if (seqArr[0].startsWith('>')) {        //if gene or ref genes are entered in fasta format
-            geneArr = seqArr.reduce((acc, el) => {
-                if (el.startsWith('>')) {
-                    return [...acc, []];
-                } else {                //returns an array of all the genes
-                    return [...acc.splice(0, acc.length -1), acc[acc.length -1] + el];
-                }
-            }, []);           
-            joinedGenes = geneArr.join('');
-        } else {    
-            joinedGenes = userInput;
-        }
-        //replace whitespace characters, convert to upper case and replace rna (U) to dna (T)
-        joinedGenes = joinedGenes.replace(/\s/g,"").toUpperCase().replace(/U/g, 'T');
-
-        
-        //------USER DNA INPUT WARNINGS
-
-        //WARNING if input contains characters other than ATCG (U)
-        if ((/[^atgcu]/i).test(joinedGenes)) {
-            errors.push('Your sequence contains characters other than ATGC/AUGC which will be ignored.')
-            //REMOVE CHARACTERS
-            joinedGenes = joinedGenes.replace(/[^atgcu]/ig, '');
-        }
-
-        //WARNING: input DNA sequence is not divisible by 3
-        if (joinedGenes.length % 3 != 0) {
-            //REMOVE x characters at the end of the sequence
-            const x = joinedGenes.length % 3;
-            errors.push('Your gene sequence is not divisible by 3. Therefore, the last ' + x + ' bases will be ignored.');     
-            joinedGenes = joinedGenes.slice(0, joinedGenes.length - x);
-        }
-        
-        //WARNING: input DNA sequence does not start with A
-        if (!joinedGenes.startsWith('ATG')) {
-            errors.push('Your sequence does not start with a start codon.');
-        }
-        return {
-            cleanedSeq: joinedGenes,
-            errors: errors
-        };
-
-        //FOR GENE, optional
-        //if entered DNA contains stop codons -> warn user and ask whether they want to proceed
-        //FOR REFS, optional
-        //Checking for Start/Stop codons only if fasta format was entered!
-    }    
-
     function checkAndSubmitInput(gene, refSource, refTarget) {
         //handle empty input:
         if (props.example) {
@@ -257,7 +201,7 @@ export default function DnaInputs(props) {
                     multiline={true}
                     rows={6}
                     rowsMax={6}
-                    className={stylesTextField.margWidth} 
+                    className={styles.margWidth} 
                     inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
                     onChange={e => {
                         !props.example && handleChange(e)
@@ -270,7 +214,7 @@ export default function DnaInputs(props) {
                     </IconButton>
                 </Tooltip>
                 {showGeneExplanation && 
-                    <div style={{width: '300px', marginLeft: '20px'}}>
+                    <div className={styles.expl}>
                         <Typography variant='body2' color='primary' gutterBottom>
                             {(props.example && geneExampleExplanation) || geneExplanation} 
                         </Typography>
@@ -295,7 +239,7 @@ export default function DnaInputs(props) {
                     multiline={true}
                     rows={6}
                     rowsMax={6}
-                    className={stylesTextField.margWidth} 
+                    className={styles.margWidth} 
                     inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
                     onChange={e => {
                         !props.example && handleChange(e)
@@ -308,7 +252,7 @@ export default function DnaInputs(props) {
                     </IconButton>
                 </Tooltip>
                 {showRefSourceExplanation && 
-                    <div style={{width: '300px', marginLeft: '20px'}}>
+                    <div className={styles.expl}>
                         <Typography variant='body2' color='primary' gutterBottom>
                             {(props.example && refSourceExampleExplanation) || refSourceExplanation} 
                         </Typography>
@@ -333,7 +277,7 @@ export default function DnaInputs(props) {
                     multiline={true}
                     rows={6}
                     rowsMax={6}
-                    className={stylesTextField.margWidth} 
+                    className={styles.margWidth} 
                     inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
                     onChange={e => {
                         !props.example && handleChange(e)
@@ -345,7 +289,7 @@ export default function DnaInputs(props) {
                     </IconButton>
                 </Tooltip>
                 {showRefTargetExplanation && 
-                    <div style={{width: '300px', marginLeft: '20px'}}>
+                    <div className={styles.expl}>
                         <Typography variant='body2' color='primary' gutterBottom>
                             {(props.example && refTargetExampleExplanation) || refTargetExplanation}                         </Typography>
                     </div>                
@@ -356,7 +300,7 @@ export default function DnaInputs(props) {
                 variant='contained'
                 color='primary'
                 disabled={(!props.example && buttonIsDisabled) || false}
-                className={stylesBtn.submitBtn}
+                className={styles.submitBtn}
                 onClick={() => checkAndSubmitInput(geneCleanedSeq, refSourceCleanedSeq, refTargetCleanedSeq)}
             >
                 {(props.example && 'Show Example Results') || 'Submit'}

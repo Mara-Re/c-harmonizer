@@ -9,7 +9,7 @@ import axios from 'axios';
 import {exampleResults} from './example';
 import { makeStyles } from '@material-ui/core/styles';
 
-export const useStylesChart = makeStyles(theme => ({
+export const useStyles = makeStyles(theme => ({
     container: {
         height: '250px',
         width: '100%',
@@ -18,13 +18,19 @@ export const useStylesChart = makeStyles(theme => ({
     },
     sect: {
         padding: '50px 0 0'
+    },
+    margL: {
+        marginLeft: '20px'
+    },
+    textAlignL: {
+        textAlign: 'left'
     }
 }));
 
 Chart.defaults.global.defaultFontFamily = "'Roboto', sans-serif";
 
 export default function Graph(props) {
-    const stylesChart = useStylesChart();
+    const styles = useStyles();
     const chartRef = useRef();
 
     const geneScoreSource = useSelector(state => {
@@ -119,7 +125,7 @@ export default function Graph(props) {
     }
     
     return (
-        <section className={stylesChart.sect}>
+        <section className={styles.sect}>
             <Box display='flex' alignItems='center'>
                 <Typography variant='h6' component='h2' gutterBottom>
                     Codon Scores for Gene of Interest
@@ -143,18 +149,18 @@ export default function Graph(props) {
                         style={{display: 'none'}}
                     />
                     <Tooltip title="Download scores" placement="right-start">
-                        <IconButton type='submit' aria-label="download scores" style={{marginLeft: '20px'}}>
+                        <IconButton type='submit' aria-label="download scores" className={styles.margL}>
                             <GetAppIcon />
                         </IconButton>
                     </Tooltip>
                 </form>                 
             </Box>
-            <div className={stylesChart.container}>
+            <div className={styles.container}>
                 <div style={{height: '100%', width: widthOfChart}}>
                     <canvas
                         id="myChart"
                         ref={chartRef}
-                        style={{textAlign: 'left'}}
+                        className={styles.textAlignL}
                     />
                 </div>
             </div>

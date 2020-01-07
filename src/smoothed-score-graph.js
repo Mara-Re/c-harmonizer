@@ -7,7 +7,7 @@ import Chart from "chart.js";
 import {exampleResults} from './example';
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStylesChart = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
     container: {
         height: '250px',
         width: '100%',
@@ -16,6 +16,9 @@ const useStylesChart = makeStyles(theme => ({
     },
     sect: {
         padding: '50px 0 0'
+    },
+    margL: {
+        marginLeft: '20px'
     }
 }));
 
@@ -23,7 +26,7 @@ Chart.defaults.global.defaultFontFamily = "'Roboto', sans-serif"
 // Chart.defaults.global.elements.line.tension = 0;
 
 export default function SmoothedScoreGraph(props) {
-    const stylesChart = useStylesChart();
+    const styles = useStyles();
     const chartRef = useRef();
     
     const geneScoreSourceSmooth = useSelector(state => {
@@ -115,7 +118,7 @@ export default function SmoothedScoreGraph(props) {
     }
     
     return (
-        <section className={stylesChart.sect}>
+        <section className={styles.sect}>
             <Box display='flex' alignItems='center'>
                 <Typography variant='h6' component='h2' gutterBottom>
                     Smoothed Codon Scores for Gene of Interest
@@ -139,7 +142,7 @@ export default function SmoothedScoreGraph(props) {
                         style={{display: 'none'}}
                     />
                     <Tooltip title="Download smoothed scores" placement="right-start">
-                        <IconButton type='submit' aria-label="download smoothed scores" style={{marginLeft: '20px'}}>
+                        <IconButton type='submit' aria-label="download smoothed scores" className={styles.margL}>
                             <GetAppIcon />
                         </IconButton>
                     </Tooltip>
@@ -147,7 +150,7 @@ export default function SmoothedScoreGraph(props) {
                 
             </Box>
             
-            <div className={stylesChart.container}>
+            <div className={styles.container}>
                 <div style={{height: '100%', width: widthOfChart}}>
                     <canvas
                         id="myChart"

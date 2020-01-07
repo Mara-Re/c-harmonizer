@@ -9,7 +9,7 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import {exampleResults} from './example';
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStylesTable = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
     container: {
         width: '60%',
         minWidth: '400px',
@@ -18,12 +18,15 @@ const useStylesTable = makeStyles(theme => ({
     },
     sect: {
         padding: '50px 0'
+    },
+    margL: {
+        marginLeft: '20px'
     }
 }));
 
 
 export default function CodonUsage(props) {
-    const stylesTable = useStylesTable();
+    const styles = useStyles();
 
     const codonScoreObjSource = useSelector(state => {
         if (props.example) {
@@ -64,7 +67,7 @@ export default function CodonUsage(props) {
     }
 
     return (
-        <section className={stylesTable.sect}> 
+        <section className={styles.sect}> 
             <Box display='flex' alignItems='center'>
                 <Typography variant='h6' component='h2' gutterBottom>
                     Codon Scores Comparision Source and Target Organism
@@ -79,14 +82,14 @@ export default function CodonUsage(props) {
                     />
                     
                     <Tooltip title="Download codon scores" placement="right-start">
-                        <IconButton type='submit' aria-label="download codon scores" style={{marginLeft: '20px'}}>
+                        <IconButton type='submit' aria-label="download codon scores" className={styles.margL}>
                             <GetAppIcon />
                         </IconButton>
                     </Tooltip>
                 </form> 
                 
             </Box>
-            <div className={stylesTable.container}>
+            <div className={styles.container}>
 
                 <TableContainer component={Paper} >
                     <Table size="small">
