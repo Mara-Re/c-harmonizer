@@ -27,7 +27,6 @@ export async function submitInput(gene, refSource, refTarget) {
             results: data
         };
     } catch(err) {
-        console.log('error in action creator submitInput');
-        //HANDLE ERROR: REDIRECT TO /
+        //HANDLE ERROR: REDIRECT TO '/' and display error message
     }
 };

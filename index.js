@@ -4,21 +4,6 @@ const compression = require('compression');
 const seq = require('./seq-calculations');
 const prepForFile = require('./prep-file-download');
 
-//To save results in a file -> to use in 'example.js' in frontend
-const fs = require('fs');
-
-//----------------FOR TESTING------------------------------
-const {
-    sourceCodonScoresEx,
-    targetCodonScoresEx,
-    geneScoreSourceEx,
-    geneScoreTargetEx,
-    harmonizedSeqEx,
-    harmonizedGeneScoreTargetEx
-} = require('./hardcoded-examples');
-//------------^^^^FOR TESTING------------------------------
-
-
 //----------------MIDDLEWARE----------------
 app.use(compression());
 app.use(express.json());
@@ -65,27 +50,15 @@ app.post('/seq-input.json', async (req, res) => {
             geneScoreTargetSmooth,
             harmonizedGeneScoreTargetSmooth
         };
-        //to save results in file -> to use in 'example.js' in frontend
-        fs.writeFile("test.json", JSON.stringify(results), function(err) {
-            if(err) {
-                return console.log(err);
-            }
-            console.log("The file was saved!");
-        }); 
 
         res.json(
             results
         );
+        
     } catch (err) {
         console.log('err in saveSeqInput: ', err);
         res.json({
-            error: true,
-            // sourceCodonScores,
-            // targetCodonScores,
-            // harmonizedGeneSeq,
-            // geneScoreSource,
-            // geneScoreTarget,
-            // harmonizedGeneScoreTarget
+            error: true
         });
     }
 });
