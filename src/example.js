@@ -2,6 +2,7 @@ export const exampleSourceOrganism = 'Escherichia coli';
 
 export const exampleTargetOrganism = 'Saccharomyces cerevisiae';
 
+export const exampleGeneName = 'acrB';
 
 export const exampleGene = `>acrB NC_011751.1:c543119-539970 Escherichia coli UMN026, complete genome
 ATGCCTAATTTCTTTATCGATCGCCCGATTTTTGCGTGGGTGATCGCCATTATCATCATGTTGGCAGGGG
