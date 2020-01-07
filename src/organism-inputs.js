@@ -5,8 +5,17 @@ import {Link} from 'react-router-dom';
 import {TextField, Box, Typography} from '@material-ui/core';
 import {exampleSourceOrganism, exampleTargetOrganism} from './example';
 
+import { makeStyles } from '@material-ui/core/styles';
 
-import {useTextFieldStyles} from './styles';
+
+// import {useTextFieldStyles} from './styles';
+
+const useTextFieldStyles = makeStyles(theme => ({
+    margWidth: {
+        width: '400px',
+        margin: '20px 20px 20px 0'
+    }
+}));
 
 export default function OrganismInputs(props) {
     const dispatch = useDispatch();
