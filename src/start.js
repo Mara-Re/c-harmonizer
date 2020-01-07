@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './app';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
 
 //----FOR REDUX
 import { createStore, applyMiddleware } from 'redux';
@@ -32,9 +32,11 @@ const theme = createMuiTheme({
 
 ReactDOM.render(
     <Provider store={store}>
+      <StylesProvider injectFirst>
         <ThemeProvider theme={theme}>
             <App />
         </ThemeProvider>
+      </StylesProvider>
     </Provider>,
     document.querySelector('main')
 );

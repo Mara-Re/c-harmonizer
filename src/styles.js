@@ -21,19 +21,9 @@ export const useNavbarStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'space-around'
     },
-    // navbarLogo: {
-    //     height: '40px',
-    //     // width: '40px',
-    //     paddingRight: '10px',
-    // },
     flexContainer: {
         display: 'flex',
         justifyContent: 'space-between'
-    },
-    navbarTop: {
-        background: theme.palette.primary.dark,
-        width: '100vw',
-        height: '14px'
     },
     noPadding: {
         padding: '0'
