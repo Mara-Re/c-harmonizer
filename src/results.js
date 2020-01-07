@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useSelector} from 'react-redux'; 
-import {Typography} from '@material-ui/core';
+import {Typography, CircularProgress} from '@material-ui/core';
 import Graph from './graph';
 import HarmonizedGene from './harmonized-gene';
 import CodonUsage from './codon-usage';
@@ -21,7 +21,11 @@ export default function Results({example}) {
     }, [results]);
   
     if (!example && !results) {
-        return null;
+        return (
+            <div>
+                <CircularProgress ></CircularProgress>
+            </div>
+        );
     }
 
     return (

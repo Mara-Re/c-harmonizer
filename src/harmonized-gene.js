@@ -1,19 +1,23 @@
 import React, {useRef} from 'react';
 import {useSelector} from 'react-redux';
-import {Typography, TextField, IconButton, Tooltip, Box} from '@material-ui/core';
+import {Typography, TextField, IconButton, Tooltip, Box, CircularProgress} from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import {exampleResults} from './example';
 import { makeStyles } from '@material-ui/core/styles';
 
-const useTextFieldStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
     margWidth: {
         width: '400px',
         margin: '20px 20px 20px 0'
+    },    
+    spinner: {
+        paddingTop: '30px',
+        paddingLeft: '30px'
     }
 }));
 
 export default function HarmonizedGene(props) {
-    const stylesTextField = useTextFieldStyles();
+    const styles = useStyles();
     const inputRef = useRef();
 
     const harmonizedSeq = useSelector(state => {
@@ -31,7 +35,11 @@ export default function HarmonizedGene(props) {
     };
     
     if (!harmonizedSeq) {
-        return null //OR SPINNER!
+        return (
+            <div className={styles.spinner}>
+                <CircularProgress></CircularProgress>
+            </div>
+        );
     }
 
     return (
@@ -55,7 +63,7 @@ export default function HarmonizedGene(props) {
                     multiline={true}
                     rows={6}
                     rowsMax={6}
-                    className={stylesTextField.margWidth} 
+                    className={styles.margWidth} 
                     inputProps={{style: {fontFamily:'Roboto mono, monospace'}}}
 
                 />
