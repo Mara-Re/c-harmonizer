@@ -20,7 +20,7 @@ export default function Results({example}) {
           }
     }, [results]);
   
-    if (!results) {
+    if (!example && !results) {
         return null;
     }
 
@@ -29,10 +29,18 @@ export default function Results({example}) {
             <Typography variant='h4' component='h1' gutterBottom>
                 {example && 'Example '}Results
             </Typography>
-            <HarmonizedGene />
-            <SmoothedScoreGraph />            
-            <Graph />
-            <CodonUsage />
+            <HarmonizedGene 
+                example={example}
+            />
+            <SmoothedScoreGraph 
+                example={example}
+            />            
+            <Graph 
+                example={example}
+            />
+            <CodonUsage 
+                example={example}
+            />
         </>
     );
 };

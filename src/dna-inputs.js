@@ -216,6 +216,7 @@ export default function DnaInputs(props) {
             return;
         }
         if (!gene || !refSource || !refTarget) {
+            console.log('if (!gene || !refSource || !refTarget) entered');
             return;
         } 
         sessionStorage.removeItem('results');
@@ -355,7 +356,7 @@ export default function DnaInputs(props) {
             <Button
                 variant='contained'
                 color='primary'
-                disabled={(props.example && false) || buttonIsDisabled}
+                disabled={(!props.example && buttonIsDisabled) || false}
                 className={stylesBtn.submitBtn}
                 onClick={() => checkAndSubmitInput(geneCleanedSeq, refSourceCleanedSeq, refTargetCleanedSeq)}
             >

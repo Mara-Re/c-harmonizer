@@ -17,7 +17,10 @@ export default function HarmonizedGene(props) {
     const inputRef = useRef();
 
     const harmonizedSeq = useSelector(state => {
+        console.log('state useSelector entered');
+        console.log('props.example: ', props.example);
         if (props.example) {
+            console.log(' if (props.example) in harmonizedSeq useSelector entered');
             return exampleResults.harmonizedGeneSeq;
         }
         return state.results && state.results.harmonizedGeneSeq;
