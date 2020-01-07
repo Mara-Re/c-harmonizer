@@ -3,6 +3,7 @@ const refSource = sessionStorage.getItem('refSource');
 const refTarget = sessionStorage.getItem('refTarget');
 const sourceOrganism = sessionStorage.getItem('sourceOrganism');
 const targetOrganism = sessionStorage.getItem('targetOrganism');
+const geneName = sessionStorage.getItem('geneName');
 const results = sessionStorage.getItem('results') && JSON.parse(`${sessionStorage.getItem('results')}`)
 
 export default function reducer (state = {
@@ -11,6 +12,7 @@ export default function reducer (state = {
     refTarget,
     sourceOrganism,
     targetOrganism,
+    geneName,
     results
 }, action) {
 
