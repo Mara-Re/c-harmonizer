@@ -143,8 +143,8 @@ export default function DnaInputs(props) {
             return undefined;
         }
         //if input is not empty:    
-        //-----FASTA handling---- do not modify input for the state, just do analysis for Warnings
-        let seqArr = userInput.split('\n'); //split on new lines -> to check for fasta
+        //-----FASTA handling--------- 
+        let seqArr = userInput.trim().split('\n'); //split on new lines -> to check for fasta
         let geneArr;
         let joinedGenes;
         let errors = [];
@@ -175,7 +175,7 @@ export default function DnaInputs(props) {
 
         //WARNING: input DNA sequence is not divisible by 3
         if (joinedGenes.length % 3 != 0) {
-            //REMOVE x characters at the end of the sequence!
+            //REMOVE x characters at the end of the sequence
             const x = joinedGenes.length % 3;
             errors.push('Your gene sequence is not divisible by 3. Therefore, the last ' + x + ' bases will be ignored.');     
             joinedGenes = joinedGenes.slice(0, joinedGenes.length - x);
