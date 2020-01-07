@@ -1,10 +1,16 @@
 import React, {useRef} from 'react';
 import {useSelector} from 'react-redux';
 import {Typography, TextField, IconButton, Tooltip, Box} from '@material-ui/core';
-import {useTextFieldStyles } from './styles';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import {exampleResults} from './example';
+import { makeStyles } from '@material-ui/core/styles';
 
+const useTextFieldStyles = makeStyles(theme => ({
+    margWidth: {
+        width: '400px',
+        margin: '20px 20px 20px 0'
+    }
+}));
 
 export default function HarmonizedGene(props) {
     const stylesTextField = useTextFieldStyles();

@@ -14,8 +14,20 @@ import {
     refTargetExampleExplanation
 } from './input-explanations';
 
+import { makeStyles } from '@material-ui/core/styles';
 
-import {useTextFieldStyles, useBtnStyles} from './styles';
+const useTextFieldStyles = makeStyles(theme => ({
+    margWidth: {
+        width: '400px',
+        margin: '20px 20px 20px 0'
+    }
+}));
+const useBtnStyles = makeStyles(theme => ({
+    submitBtn: {
+        margin: '10px 0 60px',
+        width: '400px'
+    }
+}));
 
 let geneCleanedSeq;
 let refSourceCleanedSeq;
@@ -266,7 +278,6 @@ export default function DnaInputs(props) {
                 }    
             </Box>
             
-            <br/>
             <Box display='flex' alignItems='center'>
                 <TextField
                     InputProps={{
@@ -304,8 +315,6 @@ export default function DnaInputs(props) {
                     </div>                
                 }                
             </Box>
-        
-            <br/>
             
             <Box display='flex' alignItems='center'>
                 <TextField 
@@ -343,16 +352,15 @@ export default function DnaInputs(props) {
                 }                
             </Box>
             
-            <br/>
-                <Button
-                    variant='contained'
-                    color='primary'
-                    disabled={buttonIsDisabled}
-                    className={stylesBtn.submitBtn}
-                    onClick={() => checkAndSubmitInput(geneCleanedSeq, refSourceCleanedSeq, refTargetCleanedSeq)}
-                >
-                    {(props.example && 'Show Example Results') || 'Submit'}
-                </Button>
+            <Button
+                variant='contained'
+                color='primary'
+                disabled={buttonIsDisabled}
+                className={stylesBtn.submitBtn}
+                onClick={() => checkAndSubmitInput(geneCleanedSeq, refSourceCleanedSeq, refTargetCleanedSeq)}
+            >
+                {(props.example && 'Show Example Results') || 'Submit'}
+            </Button>
         </section>
     );
 };

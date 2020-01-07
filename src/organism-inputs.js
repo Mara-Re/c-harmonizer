@@ -7,9 +7,6 @@ import {exampleSourceOrganism, exampleTargetOrganism} from './example';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-
-// import {useTextFieldStyles} from './styles';
-
 const useTextFieldStyles = makeStyles(theme => ({
     margWidth: {
         width: '400px',

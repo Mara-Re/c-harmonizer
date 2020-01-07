@@ -5,19 +5,21 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 
 
 import Chart from "chart.js";
-import {useStylesChart} from './styles.js';
 import axios from 'axios';
 import {exampleResults} from './example';
+import { makeStyles } from '@material-ui/core/styles';
 
-
-
-//--------FOR TESTING:
-import {
-    geneScoreSourceEx,
-    geneScoreTargetEx,
-    harmonizedGeneScoreTargetEx
-} from './hardcoded-examples-frontend';
-//^^^^^^^^FOR TESTING:
+export const useStylesChart = makeStyles(theme => ({
+    container: {
+        height: '250px',
+        width: '100%',
+        overflowX: 'scroll',
+        padding: '5px 0'
+    },
+    sect: {
+        padding: '50px 0 0'
+    }
+}));
 
 Chart.defaults.global.defaultFontFamily = "'Roboto', sans-serif";
 

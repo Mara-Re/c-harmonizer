@@ -4,9 +4,20 @@ import {Typography, Box, Tooltip, IconButton} from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
 
 import Chart from "chart.js";
-import {useStylesChart} from './styles.js';
 import {exampleResults} from './example';
+import { makeStyles } from '@material-ui/core/styles';
 
+const useStylesChart = makeStyles(theme => ({
+    container: {
+        height: '250px',
+        width: '100%',
+        overflowX: 'scroll',
+        padding: '5px 0'
+    },
+    sect: {
+        padding: '50px 0 0'
+    }
+}));
 
 Chart.defaults.global.defaultFontFamily = "'Roboto', sans-serif"
 // Chart.defaults.global.elements.line.tension = 0;

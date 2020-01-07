@@ -6,8 +6,20 @@ import {
     Box, Tooltip, IconButton
 } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import {useStylesTable} from './styles.js';
 import {exampleResults} from './example';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStylesTable = makeStyles(theme => ({
+    container: {
+        width: '60%',
+        minWidth: '400px',
+        overflowY: 'scroll',
+        padding: '10px 0'      
+    },
+    sect: {
+        padding: '50px 0'
+    }
+}));
 
 
 export default function CodonUsage(props) {

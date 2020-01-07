@@ -2,14 +2,43 @@ import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import {Typography, Container} from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import {useAppStyles} from './styles';
 import Navbar from './navbar';
 import TitleSection from './title-section';
 import DnaInputs from './dna-inputs';
 import OrganismInputs from './organism-inputs';
 import Results from './results';
+import { makeStyles } from '@material-ui/core/styles';
 
-import {useGlobalStyles } from './styles';
+const useGlobalStyles = makeStyles(theme => ({
+    '@global': {
+        //SCROLL BAR DISPLAY:
+        '*::-webkit-scrollbar': {
+          width: '0.4em'
+        },
+        '*::-webkit-scrollbar-track': {
+          '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
+        },
+        '*::-webkit-scrollbar-thumb': {
+          backgroundColor: 'rgba(0,0,0,.3)',
+          outline: '1px solid slategrey'
+        }
+    }
+}));
+
+const useAppStyles = makeStyles(theme => ({
+    marginT: {
+        marginTop: '30px'
+    },
+    foot: {
+        background: '#45748C',
+        color: '#FFFFFF',
+        height: '40px',
+        display:'flex',
+        alignItems: 'center', 
+        position: 'absolute',
+        bottom: '0'
+    }
+}));
 
 
 export default function App(props) {

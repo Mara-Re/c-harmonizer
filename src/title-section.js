@@ -1,6 +1,16 @@
 import React from 'react';
 import {Typography, Box} from '@material-ui/core';
-import {useTitleSectionStyles} from './styles';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useTitleSectionStyles = makeStyles(theme => ({
+    title: {
+        width: '500px',
+        marginBottom: '50px'
+    }, 
+    margTop: {
+        marginTop: '30px'
+    }
+}));
 
 export default function TitleSection() {
     const titleSectionStyles = useTitleSectionStyles();
