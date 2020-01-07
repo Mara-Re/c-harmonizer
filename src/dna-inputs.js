@@ -144,7 +144,7 @@ export default function DnaInputs(props) {
         try {
             sessionStorage.setItem(e.target.id, e.target.value); 
           } catch (e) {
-            console.log('Error sessionStorage: ', e);
+              //storing user input in sessionStorage not possible
           }
         //put input into REDUX STATE:
         dispatch(inputChange(e.target.id, e.target.value));
@@ -216,7 +216,6 @@ export default function DnaInputs(props) {
             return;
         }
         if (!gene || !refSource || !refTarget) {
-            console.log('if (!gene || !refSource || !refTarget) entered');
             return;
         } 
         sessionStorage.removeItem('results');

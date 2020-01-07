@@ -16,7 +16,7 @@ export default function Results({example}) {
         try {
             results && sessionStorage.setItem('results', JSON.stringify(results));
           } catch (e) {
-            console.log('Error sessionStorage results: ', e);
+              //setItem sessionStorage unsuccessful
           }
     }, [results]);
   
