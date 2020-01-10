@@ -6,7 +6,7 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 
 import Chart from "chart.js";
 import axios from 'axios';
-import {exampleResults} from './example';
+import {exampleResults, exampleGeneName, exampleSourceOrganism, exampleTargetOrganism} from './example';
 import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
@@ -53,6 +53,27 @@ export default function Graph(props) {
         }
         return state.results && state.results.harmonizedGeneScoreTarget 
     });
+
+    const geneName = useSelector(state => {
+        if (props.example) {
+            return exampleGeneName;
+        }
+        return state.geneName && state.geneName.trim();
+    });
+
+    const sourceOrganism = useSelector(state => {
+        if (props.example) {
+            return exampleSourceOrganism;
+        }
+        return state.sourceOrganism && state.sourceOrganism.trim();
+    });
+
+    const targetOrganism = useSelector(state => {
+        if (props.example) {
+            return exampleTargetOrganism;
+        }
+        return state.targetOrganism && state.targetOrganism.trim();
+    });
     
     const labelIndex = geneScoreSource && geneScoreSource.map((el, index) => {
         return index;
@@ -86,14 +107,14 @@ export default function Graph(props) {
                     labels: labelIndex,
                     datasets: [
                         {
-                            label: "Score in Source Organism",
+                            label: `Scores in ${sourceOrganism || 'Source Organism'}`,
                             data: geneScoreSource,                            
                             borderColor: 'rgb(0, 0, 0, 0.7)',
                             pointBackgroundColor: 'rgb(0, 0, 0, 0.7)',
                             ...datasetStyles                            
                         },
                         {
-                            label: "Score in Target Organism without Harmonization",
+                            label: `Scores in ${targetOrganism || 'Target Organism'} without Harmonization`,
                             data: geneScoreTarget,
                             borderColor: 'rgb(244, 67, 54, 0.7)',
                             pointBackgroundColor: 'rgb(244, 67, 54, 0.5)',
@@ -101,7 +122,7 @@ export default function Graph(props) {
                             ...datasetStyles,
                         },
                         {
-                            label: "Score for Harmonized Gene",
+                            label: `Scores for Harmonized Gene in ${targetOrganism || 'Target Organism'}`,
                             data: harmonizedGeneScoreTarget,
                             borderColor: 'rgb(69, 116, 140, 0.7)',
                             pointBackgroundColor: 'rgb(69, 116, 140, 0.7)',
@@ -128,7 +149,7 @@ export default function Graph(props) {
         <section className={styles.sect}>
             <Box display='flex' alignItems='center'>
                 <Typography variant='h6' component='h2' gutterBottom>
-                    Codon Scores for Gene of Interest
+                    Codon Scores for {geneName || 'Gene of Interest'}
                 </Typography>
 
                 {/* FORM with HIDDEN INPUT FIELDS for POST Request for FILE DOWNLOAD */}

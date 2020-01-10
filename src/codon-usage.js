@@ -6,7 +6,7 @@ import {
     Box, Tooltip, IconButton
 } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import {exampleResults} from './example';
+import {exampleResults,  exampleSourceOrganism, exampleTargetOrganism} from './example';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -47,6 +47,20 @@ export default function CodonUsage(props) {
         return state.results.targetCodonScores;
     });
 
+    const sourceOrganism = useSelector(state => {
+        if (props.example) {
+            return exampleSourceOrganism;
+        }
+        return state.sourceOrganism && state.sourceOrganism.trim();
+    });
+
+    const targetOrganism = useSelector(state => {
+        if (props.example) {
+            return exampleTargetOrganism;
+        }
+        return state.targetOrganism && state.targetOrganism.trim();
+    });
+
     const rows = codonScoreObjSource &&
      Object.keys(codonScoreObjSource).reduce((arr, aA) => {
         return [...arr, ...Object.keys(codonScoreObjSource[aA]).map(codon => {
@@ -70,7 +84,7 @@ export default function CodonUsage(props) {
         <section className={styles.sect}> 
             <Box display='flex' alignItems='center'>
                 <Typography variant='h6' component='h2' gutterBottom>
-                    Codon Scores Comparision Source and Target Organism
+                    Codon Scores Comparision {sourceOrganism || 'Source'} and {targetOrganism || 'Target Organism'}
                 </Typography>
 
                 {/* FORM with HIDDEN INPUT FIELDS for POST Request for FILE DOWNLOAD */}
@@ -97,8 +111,8 @@ export default function CodonUsage(props) {
                             <TableRow>
                                 <TableCell>Amino Acid</TableCell>
                                 <TableCell align="right">Codon</TableCell>
-                                <TableCell align="right">Score Source Organism</TableCell>                            
-                                <TableCell align="right">Score Target Organism</TableCell>                            
+                                <TableCell align="right">Score {sourceOrganism || 'Source Organism'}</TableCell>                            
+                                <TableCell align="right">Score {targetOrganism || 'Target Organism'}</TableCell>                            
                             </TableRow>
                         </TableHead>
                         <TableBody>

@@ -4,7 +4,7 @@ import {Typography, Box, Tooltip, IconButton} from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
 
 import Chart from "chart.js";
-import {exampleResults} from './example';
+import {exampleResults, exampleGeneName, exampleSourceOrganism, exampleTargetOrganism} from './example';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -49,6 +49,27 @@ export default function SmoothedScoreGraph(props) {
         }
         return state.results && state.results.harmonizedGeneScoreTargetSmooth 
     });
+
+    const geneName = useSelector(state => {
+        if (props.example) {
+            return exampleGeneName;
+        }
+        return state.geneName && state.geneName.trim();
+    });
+
+    const sourceOrganism = useSelector(state => {
+        if (props.example) {
+            return exampleSourceOrganism;
+        }
+        return state.sourceOrganism && state.sourceOrganism.trim();
+    });
+
+    const targetOrganism = useSelector(state => {
+        if (props.example) {
+            return exampleTargetOrganism;
+        }
+        return state.targetOrganism && state.targetOrganism.trim();
+    });
     
     const labelIndex = geneScoreSourceSmooth && geneScoreSourceSmooth.map((el, index) => {
         return index;
@@ -81,13 +102,13 @@ export default function SmoothedScoreGraph(props) {
                     labels: labelIndex,
                     datasets: [
                         {
-                            label: "Smoothed Score in Source Organism",
+                            label: `Smoothed Scores in ${sourceOrganism || 'Source Organism'}`,
                             data: geneScoreSourceSmooth,
                             borderColor: 'rgb(0, 0, 0)',
                             ...smothedStyles
                         },
                         {
-                            label: "Smoothed Score in Target Organism without Harmonization",
+                            label: `Smoothed Scores in ${targetOrganism || 'Target Organism'} without Harmonization`,
                             data: geneScoreTargetSmooth,
                             borderColor: 'rgb(244, 67, 54)',
                             ...smothedStyles,
@@ -95,7 +116,7 @@ export default function SmoothedScoreGraph(props) {
 
                         },
                         {
-                            label: "Smoothed Score for Harmonized Gene",
+                            label: `Smoothed Scores for Harmonized Gene in ${targetOrganism || 'Target Organism'}`,
                             data: harmonizedGeneScoreTargetSmooth,
                             borderColor: 'rgb(69, 116, 140)',
                             ...smothedStyles
@@ -121,7 +142,7 @@ export default function SmoothedScoreGraph(props) {
         <section className={styles.sect}>
             <Box display='flex' alignItems='center'>
                 <Typography variant='h6' component='h2' gutterBottom>
-                    Smoothed Codon Scores for Gene of Interest
+                    Smoothed Codon Scores for {geneName || 'Gene of Interest'}
                 </Typography>
 
                 {/* FORM with HIDDEN INPUT FIELDS for POST Request for FILE DOWNLOAD */}
