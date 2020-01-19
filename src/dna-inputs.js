@@ -42,18 +42,15 @@ export default function DnaInputs(props) {
     const [buttonIsDisabled, setButtonIsDisabled] = useState(true);
     const [errorGene, setErrorGene] = useState({
         error: false,
-        helperTxt: '',
-        key: 'key1'
+        helperTxt: ''
     });
     const [errorRefSource, setErrorRefSource] = useState({
         error: false,
-        helperTxt: '',
-        key: 'key2'
+        helperTxt: ''
     });
     const [errorRefTarget, setErrorRefTarget] = useState({
         error: false,
-        helperTxt: '',
-        key: 'key3'
+        helperTxt: ''
     }); 
     
     const [showGeneExplanation, setShowGeneExplanation] = useState(false);
@@ -71,26 +68,19 @@ export default function DnaInputs(props) {
     const refTarget = useSelector(state => {
         return state.refTarget;
     }); 
-       
-    let key1Nr = 0;
-    let key2Nr = 0;
-    let key3Nr = 0;
-
+    
     useEffect(() => {
         const handledInput = inputHandling(gene);
         geneCleanedSeq = handledInput && handledInput.cleanedSeq;
-        key1Nr = key1Nr + 1;
         if (handledInput && handledInput.userInputWarning) {
             setErrorGene({
                 error: true,
-                helperTxt: handledInput.userInputWarning,
-                key: `key1${key1Nr + 1}`
+                helperTxt: handledInput.userInputWarning
             });
         } else {
             setErrorGene({
                 error: false,
                 helperTxt: '',
-                key: `key1${key1Nr + 1}`
             });
         }
     }, [gene]);
@@ -98,18 +88,15 @@ export default function DnaInputs(props) {
     useEffect(() => {
         const handledInput = inputHandling(refSource);
         refSourceCleanedSeq = handledInput && handledInput.cleanedSeq;
-        key2Nr = key2Nr + 1;
         if (handledInput && handledInput.userInputWarning) {
             setErrorRefSource({
                 error: true,
-                helperTxt: handledInput.userInputWarning,
-                key: `key2${key2Nr + 1}`
+                helperTxt: handledInput.userInputWarning
             });
         } else {
             setErrorRefSource({
                 error: false,
-                helperTxt: '',
-                key: `key2${key2Nr + 1}`
+                helperTxt: ''
             });
         }
     }, [refSource]);
@@ -117,18 +104,15 @@ export default function DnaInputs(props) {
     useEffect(() => {
         const handledInput = inputHandling(refTarget);
         refTargetCleanedSeq = handledInput && handledInput.cleanedSeq;
-        key3Nr = key3Nr + 1;
         if (handledInput && handledInput.userInputWarning) {
             setErrorRefTarget({
                 error: true,
-                helperTxt: handledInput.userInputWarning,
-                key: `key3${key3Nr + 1}`
+                helperTxt: handledInput.userInputWarning
             });
         } else {
             setErrorRefTarget({
                 error: false,
-                helperTxt: '',
-                key: `key3${key3Nr + 1}`
+                helperTxt: ''
             });
         }
     }, [refTarget]);
@@ -191,7 +175,6 @@ export default function DnaInputs(props) {
                     }}
                     error={(!props.example && errorGene.error)}
                     helperText={(!props.example && errorGene.helperTxt)}
-                    key={errorGene.key}
                     autoComplete='off' 
                     variant='outlined' 
                     id='gene' 
@@ -229,7 +212,6 @@ export default function DnaInputs(props) {
                     }} 
                     error={(!props.example && errorRefSource.error)}
                     helperText={(!props.example && errorRefSource.helperTxt)}
-                    key={errorRefSource.key}
                     autoComplete='off' 
                     variant='outlined' 
                     id='refSource' 
@@ -267,7 +249,6 @@ export default function DnaInputs(props) {
                     }}
                     error={(!props.example && errorRefTarget.error)}
                     helperText={(!props.example && errorRefTarget.helperTxt)}
-                    key={errorRefTarget.key}
                     autoComplete='off' 
                     variant='outlined' 
                     id='refTarget' 
