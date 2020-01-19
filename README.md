@@ -39,4 +39,4 @@ Feel free to comment, fork, and submit pull requests.
 
 ## License
 
-The c.Harmonizer project is released under the [GNU General Public License v3.0.](https://github.com/Mara-Re/charmonizer/blob/master/LICENSE.md).
+The c.Harmonizer project is released under the [GNU General Public License v3.0](https://github.com/Mara-Re/charmonizer/blob/master/LICENSE.md).
