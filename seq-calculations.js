@@ -1,16 +1,5 @@
 const {aminoDict, allCodons, codonAaDict, emptyCodonCountObj} = require('./codons');
 
-
-//----------------FOR TESTING------------------------------
-
-const {
-    FASwoIntrons, 
-    MSASwoIntrons,
-    exDNA1WoAtgStartWStopCodons
-}                       = require('./dna-examples');
-//------------^^^^FOR TESTING------------------------------
-
-
 function calcCodonScoreDict(refGene) {
     const codonArr = splitDnaIntoCodons(refGene);
     const codonCounts = countAllCodons(codonArr);
@@ -18,12 +7,11 @@ function calcCodonScoreDict(refGene) {
 
     let scoreDict = {};
     for (const aA in aminoDict) {             
-        let obj = {};
-        for (let i = 0; i < aminoDict[aA].length; i++) {
-            let codon = aminoDict[aA][i];
-            obj[codon] = rcaScores[codon];
-        }
-        scoreDict[aA] = obj;
+        let codonScoresForAa = aminoDict[aA].reduce((codonScoresForAa, codon) => {
+            return {...codonScoresForAa, [codon]: rcaScores[codon]};
+        }, {});
+
+        scoreDict[aA] = codonScoresForAa;
     }
     // console.log('scoreDict: ', scoreDict);
 
@@ -40,7 +28,6 @@ function calcCodonScoreDict(refGene) {
 }
 
 function calcGeneScore(gene, refCodonScoresDict) {
-    // console.log('codon scores: ', refCodonScoresDict);
     const codonArr = splitDnaIntoCodons(gene);
 
     const geneScoreArray = codonArr.map(codon => {
@@ -62,8 +49,6 @@ function calcHarmonizedGeneSeq(gene, geneScoreSource, targetCodonScores) {
             if (Math.abs(targetCodonScores[aA][codonKey] - geneScoreSource[i]) < bestCodonDiff) {
                 bestCodonDiff = Math.abs(targetCodonScores[aA][codonKey] - geneScoreSource[i]);
                 bestCodon = codonKey;
-                // console.log('bestCodonDiff: ', bestCodonDiff);
-                // console.log('bestCodon: ', bestCodon);
             }
         }
         return bestCodon;
@@ -74,23 +59,21 @@ function calcHarmonizedGeneSeq(gene, geneScoreSource, targetCodonScores) {
 
 //SMOOTHED SCORE ARRAY
 function calcSmoothedScore(geneScoreArray) {
-    let smoothedScoreArr = [];
-    let plusMinus = (19 - 1) / 2;
-    for (let i = 0; i < geneScoreArray.length; i++) {
-        if (i < plusMinus|| i >= geneScoreArray.length - plusMinus) {
-            smoothedScoreArr.push(null);
+    let plusMinus = (19 - 1) / 2;  //calculate mean score for 19 codons (9 codons upstream and 9 downstream)
+
+    let smoothedScoreArr = geneScoreArray.map((score, codonPosition) => {
+        if (codonPosition < plusMinus || codonPosition >= geneScoreArray.length - plusMinus) {
+            return null;
         } else {
-            let partialArrOfScores = geneScoreArray.slice(i - plusMinus, i + plusMinus + 1);
-            
-            let sumOfScores = partialArrOfScores.reduce((mean, score) => {
-                return mean + score;
-            });          
-            
-            smoothedScoreArr.push(sumOfScores / 19);
+            const partialArrOfScores = geneScoreArray.slice(codonPosition - plusMinus, codonPosition + plusMinus + 1); 
+            const sumOfScores = partialArrOfScores.reduce((sum, score) => {
+                return sum + score;
+            });                      
+            const meanOfScores = sumOfScores / 19;
+            return meanOfScores;
         }
-    }
+    });
     // console.log('smoothedScoreArr: ', smoothedScoreArr);
-    // console.log('joined smoothedScoreArr: ', smoothedScoreArr.join(' '));
     return smoothedScoreArr;
 }
 
@@ -110,8 +93,8 @@ function splitDnaIntoCodons(dnaStr) {
 function countAllCodons(codonArr) {
     let codonCounts = {...emptyCodonCountObj}; 
     
-    for (let i = 0; i < codonArr.length; i++) {
-        codonCounts[codonArr[i]] += 1;
+    for (let codonPosition = 0; codonPosition < codonArr.length; codonPosition++) {
+        codonCounts[codonArr[codonPosition]] += 1;
     }
     // console.log("codonCounts Object: ", codonCounts);    
     // { 
@@ -131,20 +114,20 @@ function calcRelCodonAdaptScores (codonCounts) { //also requires aminoDict
     let rcaScores; 
     for (const aA in aminoDict) {     //looping through all amino acids
        
-        const countOfMostFrequentCodon = aminoDict[aA].reduce((acc, el) => {
-            if (codonCounts[el] > acc) {
-                return codonCounts[el];
+        const countOfMostFrequentCodon = aminoDict[aA].reduce((countMostFrequent, codon) => {
+            if (codonCounts[codon] > countMostFrequent) {
+                return codonCounts[codon];
             } else {
-                return acc;
+                return countMostFrequent;
             }
         }, 0);
 
-        rcaScores = aminoDict[aA].reduce((acc, el) => {
+        rcaScores = aminoDict[aA].reduce((rcaScores, codon) => {
             if (countOfMostFrequentCodon == 0) {
-                return {...acc, [el] : 1};
+                return {...rcaScores, [codon] : 1};
             } else {
-                const rcaScore = codonCounts[el] / countOfMostFrequentCodon;
-                return {...acc, [el] : rcaScore};
+                const rcaScore = codonCounts[codon] / countOfMostFrequentCodon;
+                return {...rcaScores, [codon] : rcaScore};
             }
         }, {...rcaScores});
     }
