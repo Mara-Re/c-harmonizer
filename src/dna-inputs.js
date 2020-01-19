@@ -4,7 +4,7 @@ import {inputChange, submitInput, removeResults} from './actions';
 import {Link} from 'react-router-dom';
 import {TextField, Button, Tooltip, Box, IconButton, Typography} from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
-import {cleanSequence} from './input-handling';
+import {inputHandling} from './input-handling';
 import {exampleGene, exampleRefSource, exampleRefTarget} from './example';
 import {
     geneExplanation, 
@@ -77,13 +77,13 @@ export default function DnaInputs(props) {
     let key3Nr = 0;
 
     useEffect(() => {
-        const data = cleanSequence(gene);
-        geneCleanedSeq = data && data.cleanedSeq;
+        const handledInput = inputHandling(gene);
+        geneCleanedSeq = handledInput && handledInput.cleanedSeq;
         key1Nr = key1Nr + 1;
-        if (data && data.errors && data.errors.length > 0) {
+        if (handledInput && handledInput.userInputWarning) {
             setErrorGene({
                 error: true,
-                helperTxt: data.errors.join(' '),
+                helperTxt: handledInput.userInputWarning,
                 key: `key1${key1Nr + 1}`
             });
         } else {
@@ -96,13 +96,13 @@ export default function DnaInputs(props) {
     }, [gene]);
 
     useEffect(() => {
-        const data = cleanSequence(refSource);
-        refSourceCleanedSeq = data && data.cleanedSeq;
+        const handledInput = inputHandling(refSource);
+        refSourceCleanedSeq = handledInput && handledInput.cleanedSeq;
         key2Nr = key2Nr + 1;
-        if (data && data.errors.length > 0) {
+        if (handledInput && handledInput.userInputWarning) {
             setErrorRefSource({
                 error: true,
-                helperTxt: data.errors.join(' '),
+                helperTxt: handledInput.userInputWarning,
                 key: `key2${key2Nr + 1}`
             });
         } else {
@@ -115,13 +115,13 @@ export default function DnaInputs(props) {
     }, [refSource]);
 
     useEffect(() => {
-        const data = cleanSequence(refTarget);
-        refTargetCleanedSeq = data && data.cleanedSeq;
+        const handledInput = inputHandling(refTarget);
+        refTargetCleanedSeq = handledInput && handledInput.cleanedSeq;
         key3Nr = key3Nr + 1;
-        if (data && data.errors.length > 0) {
+        if (handledInput && handledInput.userInputWarning) {
             setErrorRefTarget({
                 error: true,
-                helperTxt: data.errors.join(' '),
+                helperTxt: handledInput.userInputWarning,
                 key: `key3${key3Nr + 1}`
             });
         } else {

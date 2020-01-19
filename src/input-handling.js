@@ -1,57 +1,107 @@
-export function cleanSequence(userInput) {
-    if (!userInput || userInput == '' || userInput.trim() == '') {
+export function inputHandling(sequenceInput) {
+    if (isSeqInputEmpty(sequenceInput)) {
         return undefined;
     }
-    //if input is not empty:    
-    //-----FASTA handling--------- 
-    let seqArr = userInput.trim().split('\n'); //split on new lines -> to check for fasta
-    let geneArr;
-    let joinedGenes;
-    let errors = [];
-    if (seqArr[0].startsWith('>')) {        //if gene or ref genes are entered in fasta format
-        geneArr = seqArr.reduce((acc, el) => {
-            if (el.startsWith('>')) {
-                return [...acc, []];
-            } else {                //returns an array of all the genes
-                return [...acc.splice(0, acc.length -1), acc[acc.length -1] + el];
-            }
-        }, []);           
-        joinedGenes = geneArr.join('');
-    } else {    
-        joinedGenes = userInput;
-    }
-    //replace whitespace characters, convert to upper case and replace rna (U) to dna (T)
-    joinedGenes = joinedGenes.replace(/\s/g,"").toUpperCase().replace(/U/g, 'T');
-
+    const seqWithoutFastaNotation = cleanSeqFromFastaFormat(sequenceInput);
+    const { 
+        seqWithoutInvalidCharacters, 
+        seqContainsInvalidCharacters 
+    } = removeInvalidCharacters(seqWithoutFastaNotation);
+    const upperCaseDnaSeq = handleLowerCaseAndRnaInput(seqWithoutInvalidCharacters);
     
-    //------USER DNA INPUT WARNINGS
+    const {
+        sequenceDivisibleBy3,
+        amountOfCharactersToBeRemoved
+    } = handleSeqNotDivisibleBy3(upperCaseDnaSeq);
 
-    //WARNING if input contains characters other than ATCG (U)
-    if ((/[^atgcu]/i).test(joinedGenes)) {
-        errors.push('Your sequence contains characters other than ATGC/AUGC which will be ignored.')
-        //REMOVE CHARACTERS
-        joinedGenes = joinedGenes.replace(/[^atgcu]/ig, '');
-    }
+    const seqDoesNotStartWithStartCodon = !sequenceDivisibleBy3.startsWith('ATG');
 
-    //WARNING: input DNA sequence is not divisible by 3
-    if (joinedGenes.length % 3 != 0) {
-        //REMOVE x characters at the end of the sequence
-        const x = joinedGenes.length % 3;
-        errors.push('Your gene sequence is not divisible by 3. Therefore, the last ' + x + ' bases will be ignored.');     
-        joinedGenes = joinedGenes.slice(0, joinedGenes.length - x);
-    }
-    
-    //WARNING: input DNA sequence does not start with A
-    if (!joinedGenes.startsWith('ATG')) {
-        errors.push('Your sequence does not start with a start codon. Are you sure you want to continue?');
-    }
-    return {
-        cleanedSeq: joinedGenes,
-        errors: errors
+    const seqCorrectionsAndWarnings = {
+        seqContainsInvalidCharacters,
+        amountOfCharactersToBeRemoved,
+        seqDoesNotStartWithStartCodon
     };
 
-    //FOR GENE, optional
-    //if entered DNA contains stop codons -> warn user and ask whether they want to proceed
-    //FOR REFS, optional
-    //Checking for Start/Stop codons only if fasta format was entered!
+    const cleanedSeq = sequenceDivisibleBy3;
+    const userInputWarning = createUserInputWarning(seqCorrectionsAndWarnings);
+
+    return {
+        cleanedSeq,
+        userInputWarning
+    };    
 }    
+
+function isSeqInputEmpty(sequenceInput) {
+    if (!sequenceInput || sequenceInput == '' || sequenceInput.trim() == '') {
+        return true;
+    }
+    return false;
+}
+
+function cleanSeqFromFastaFormat(sequenceInput) {
+    if (sequenceInput.trim().startsWith('>')) {     //if gene or ref genes are entered in fasta format
+        let seqArr = sequenceInput.trim().split('\n'); //split on new lines -> to remove fasta headers
+        const dnaSeqWithoutFastaNotation = seqArr.filter(fastaSeqInput => {
+            if (fastaSeqInput.startsWith('>')) {
+                return false;
+            } else {               
+                return true;
+            }
+        }, []).join('');                              //join sequences without fasta headers
+        return dnaSeqWithoutFastaNotation;
+    } else {
+        return sequenceInput;
+    }
+}
+
+function removeInvalidCharacters(sequence) {
+    const seqWithoutWhiteSpaces = sequence.replace(/\s/g,""); 
+    let seqContainsInvalidCharacters = false;
+    if ((/[^atgcu]/i).test(seqWithoutWhiteSpaces)) {
+        seqContainsInvalidCharacters = true;
+    } 
+    return {
+        seqWithoutInvalidCharacters: seqWithoutWhiteSpaces.replace(/[^atgcu]/ig, ''), //replace any character other than atgcuATGCU
+        seqContainsInvalidCharacters
+    };
+}
+
+function handleLowerCaseAndRnaInput(sequence) {
+    //convert to upper case and replace rna (U) to dna (T)
+    return sequence.toUpperCase().replace(/U/g, 'T');
+}
+
+function handleSeqNotDivisibleBy3(sequence) {
+    let sequenceDivisibleBy3 = sequence;
+    let amountOfCharactersToBeRemoved;
+    if (sequence % 3 != 0) {
+        amountOfCharactersToBeRemoved = sequence.length % 3;     
+        //REMOVE characters at the end of the sequence:
+        sequenceDivisibleBy3 = sequence.slice(0, sequence.length - amountOfCharactersToBeRemoved);
+    }
+    return {
+        sequenceDivisibleBy3,
+        amountOfCharactersToBeRemoved
+    };
+}
+
+function createUserInputWarning(seqCorrectionsAndWarnings) {
+    const {
+        seqContainsInvalidCharacters,
+        amountOfCharactersToBeRemoved,
+        seqDoesNotStartWithStartCodon
+    } = seqCorrectionsAndWarnings;
+
+    let userInputWarnings = [];
+
+    if (seqContainsInvalidCharacters) {
+        userInputWarnings.push('Your sequence contains characters other than ATGC/AUGC which will be ignored.');
+    }
+    if (amountOfCharactersToBeRemoved > 0) {
+        userInputWarnings.push(`Your gene sequence is not divisible by 3. Therefore, the last ${amountOfCharactersToBeRemoved} bases will be ignored.`);
+    }
+    if (seqDoesNotStartWithStartCodon) {
+        userInputWarnings.push('Your sequence does not start with a start codon. Are you sure you want to continue?');
+    }
+    return userInputWarnings.join(' ');
+}
