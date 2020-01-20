@@ -137,7 +137,6 @@ function calcRelCodonAdaptScores (codonCounts) { //also requires aminoDict
 
 
 //---------------EXPORTS FOR TESTING---------------
-// module.exports.splitDnaIntoCodons = splitDnaIntoCodons;
-// module.exports.countAllCodons = countAllCodons;
-// module.exports.calcRelCodonAdaptScores = calcRelCodonAdaptScores;
-// module.exports.translateDna = translateDna;
+module.exports.splitDnaIntoCodons = splitDnaIntoCodons;
+module.exports.countAllCodons = countAllCodons;
+module.exports.calcRelCodonAdaptScores = calcRelCodonAdaptScores;
