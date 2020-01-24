@@ -162,9 +162,7 @@ export default function DnaInputs(props) {
 
     function toggleRefTargetExplanation() {
         setShowRefTargetExplanation(!showRefTargetExplanation);
-    }
-
-    
+    }    
 
     return (
         <section>

@@ -1,6 +1,9 @@
 export function inputHandling(sequenceInput) {
     if (isSeqInputEmpty(sequenceInput)) {
-        return undefined;
+        return {
+            cleanedSeq: undefined,
+            userInputWarning: undefined
+        }; 
     }
     const seqWithoutFastaNotation = cleanSeqFromFastaFormat(sequenceInput);
     const { 
@@ -105,3 +108,13 @@ function createUserInputWarning(seqCorrectionsAndWarnings) {
     }
     return userInputWarnings.join(' ');
 }
+
+//EXPORT for TESTING:
+export {
+    isSeqInputEmpty,
+    cleanSeqFromFastaFormat,
+    removeInvalidCharacters,
+    handleLowerCaseAndRnaInput,
+    handleSeqNotDivisibleBy3,
+    createUserInputWarning
+};
